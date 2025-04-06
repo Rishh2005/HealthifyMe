@@ -1,6 +1,6 @@
 # HealthifyMe
 
- It is an innovative healthcare application designed to revolutionize healthcare management and disease prediction. The app offers an intuitive and interactive platform for users to monitor their health, predict diseases based on symptoms, and engage in fun, health-focused games.
+HealthifyMe aims to enhance elder care services with its multi-agent AI system through an elderly care prototype. The system encompasses virtual health evaluation, nutrition coaching, and mental wellness tutoring, elevating senior citizens' well-being scope. With AI-enabled agents, HealthifyMe unobtrusively monitors heart rate, blood pressure, sleep, and activity levels. AI agents provide on-the-spot feedback while caregivers and medical professionals get alerted and called upon during critical situations. The system also gives seniors customised dietary plans according to their specific health requirements to aid them in adhering to the right balance of nutrition. Furthermore, HealthifyMe helps users with activities that stimulate mental clarity and emotional balance through emotional well-being games that target stress, anxiety, and depression. With all these features working together, HealthifyMe allows elderly people to freely and confidently live on their own and provides the necessary support for physical and mental health to improve their quality of life while reducing dependence on caregivers
 
 ## Features
 
