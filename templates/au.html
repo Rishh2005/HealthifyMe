@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Icon" href="styles/imgs/logo.png">
+    <link rel="stylesheet" href="../components/fixed.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <title>HealthifyMe AboutUs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f0f9ff;
+        }
+        
+        .apb-header {
+            text-align: center;
+            padding: 70px;
+            margin-bottom: 0px;
+            opacity: 0;
+        }
+
+        .apb-header h1 {
+            font-size: 2.2rem;
+            color: #2564ec;
+            margin-bottom: 15px;
+        }
+
+        .apb-header p {
+            font-size: 1.3rem;
+            color: #1e3a8a;
+            line-height: 1.6;
+        }
+
+        .cards {
+            display: grid;
+            padding: 70px;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 0px;
+            text-align: center;
+        }
+
+        .card {
+            background: #fff;
+            padding: 50px;
+            border-radius: 30px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1rem; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 4%;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.1);
+        }
+
+        .card h3 {
+            color: #1e3a8a;
+            font-size: 1.3rem;
+            margin-bottom: 15px; 
+        }
+
+        .card p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .team-section {
+            text-align: center;
+            border-radius: 30px;
+            margin: 30px;
+            opacity: 0;
+        }
+
+        .team-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a8a;
+            margin-bottom: 40px;
+        }
+
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .team-member {
+            background: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-member img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 3px solid #1e88e5;
+            transition: border-color 0.3s ease;
+        }
+
+        .team-member:hover img {
+            border-color: #2564ec;
+        }
+
+        .team-member h3 {
+            font-size: 1.3rem;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .team-member p {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .social-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .social-links a {
+            text-decoration: none;
+            font-size: 0.9rem;
+            color: #fff;
+            background-color: #1e88e5;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .social-links a i {
+            font-size: 1rem;
+        }
+
+        .social-links a.linkedin-btn {
+            background-color: #0077b5;
+        }
+
+        .social-links a.github-btn {
+            background-color: #333;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <button class="open-btn" id="openNav" id="closeNav"><i class="fa fa-bars"></i></button>
+        <div class="logo">
+            <img src="styles/imgs/logo.png">
+            <span>HealthifyMe</span>
+        </div>
+    </header>
+    <div class="side-nav" id="sideNav">
+        <button id="closeNav">&times;</button>
+        <ul id="navList">
+            <li><a href="db.html"><img src="styles/imgs/home.png">Dashboard</a></li>
+            <li><a href="nh.html"><img src="styles/imgs/location.png">Nearby Hospitals & Medical Shops</a></li>
+            <li><a href="hc.html"><img src="styles/imgs/healthcare.png">Health Analysis</a></li>
+            <li><a href="cc.html"><img src="styles/imgs/calories.png">Calorie Count</a></li>
+            <li><a href="rec.html"><img src="styles/imgs/health-check.png">Records</a></li>
+            <li><a href="apb.html"><img src="styles/imgs/calendar.png">Appointments</a></li>
+            <li><a href="profile.html"><img src="styles/imgs/user.png">Profile</a></li>
+            <li><a href="st.html"><img src="styles/imgs/settings.png">Settings</a></li>
+        </ul>
+    </div>
+    <main>
+    <div class="apb-header">
+        <h1>About HealthifyMe</h1>
+        <br>
+        <p>HealthifyMe is a comprehensive healthcare management system designed to <br>
+            streamline patient care and hospital management. Our mission is to empower <br>
+            individuals to take control of their health journey while providing healthcare <br>
+            providers with the tools they need to deliver exceptional care.</p>
+    </div>
+    <div class="cards">
+        <div class="card">
+            <img src="styles/imgs/heart.png">
+            <h3>Our Mission</h3>
+            <p>To revolutionize healthcare management by providing an intuitive, secure, and comprehensive platform that connects patients with their healthcare providers.</p>
+        </div>
+        <div class="card">
+            <img src="styles/imgs/shield.png">
+            <h3>Data Security</h3>
+            <p>We prioritize the security and privacy of your health information, employing state-of-the-art encryption and following all relevant data protection regulations.</p>
+        </div>
+        <div class="card">
+            <img src="styles/imgs/flash.png">
+            <h3>Innovative Features</h3>
+            <p>From appointment scheduling to health record management, we're constantly innovating to bring you the best healthcare management experience possible.</p>
+        </div>
+        <div class="card">
+            <img src="styles/imgs/increase.png">
+            <h3>Future Plans</h3>
+            <p>We're committed to continuously improving our platform based on user feedback and the latest advancements in healthcare technology.</p>
+        </div>
+        <div class="card">
+            <img src="styles/imgs/group.png">
+            <h3>Patient-Centered</h3>
+            <p>Our platform is designed with patients at the center, ensuring that your healthcare journey is as smooth and stress-free as possible.</p>
+        </div>
+        <div class="card">
+            <img src="styles/imgs/globe.png">
+            <h3>Global Reach</h3>
+            <p>HealthifyMe aims to make quality healthcare management accessible to people around the world, breaking down geographical barriers.</p>
+        </div>
+    </div>
+    <div class="team-section">
+        <h2>Meet Our Team</h2>
+        <div class="team-members">
+            <div class="team-member">
+                <img src=" ">
+                <h3>Rhythm Jain</h3>
+                <p>Founder <br> SRMIST (SRM Institute of Science and Technology) <br> Web Developer(Frontend & Backend Both) | Android Developer</p>
+                <div class="social-links">
+                    <a href="nkedin.com/in/rhythm-jain-7a41ba288" target="_blank" class="linkedin-btn">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/Rhythm2125" target="_blank" class="github-btn">
+                        <i class="fa fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src=" ">
+                <h3>Rishabh Jain</h3>
+                <p>Co-Founder <br> TMU (Teerthanker Mahaveer University) <br> Frontend Developer</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/rishabh-jain-625955293/" target="_blank" class="linkedin-btn">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/Rishh2005" target="_blank" class="github-btn">
+                        <i class="fa fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </main>
+  <footer>
+    <div class="left">
+      <p>© 2023 HealthifyMe. All rights reserved.</p>
+    </div>
+    <div class="right">
+        <div class="language-select">
+            <label for="language">Language: </label>
+            <select id="language">
+              <option value="en">English</option>
+            </select>
+        </div>
+        <a href="au.html">About Us</a>
+        <a href="au.html">Meet Our Team</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+    </div>
+  </footer>
+  <script>
+    // GSAP animations
+    document.addEventListener("DOMContentLoaded", () => {
+        // Navbar animation
+        gsap.to(".navbar", {
+            opacity: 1,
+            duration: 0.8,
+            ease: "power1.out"
+        });
+        
+        // Header content animation
+        gsap.to(".apb-header", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.3,
+            ease: "power2.out"
+        });
+        
+        // Card animations with staggered effect
+        gsap.to(".card", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            delay: 0.5,
+            ease: "power2.out"
+        });
+        
+        // Team section animation
+        gsap.to(".team-section", {
+            opacity: 1,
+            duration: 0.8,
+            delay: 1,
+            ease: "power2.out"
+        });
+        
+        // Team member animations
+        gsap.to(".team-member", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            delay: 1.2,
+            ease: "power2.out"
+        });
+        
+        // Footer animation
+        gsap.to("footer", {
+            opacity: 1,
+            duration: 0.8,
+            delay: 1.5,
+            ease: "power2.out"
+        });
+    });
+
+    // Side navigation functionality
+    const sideNav = document.getElementById('sideNav');
+    const openNav = document.getElementById('openNav');
+    const closeNav = document.getElementById('closeNav');
+    const mainContent = document.getElementById('mainContent');
+    const navList = document.getElementById('navList');
+
+    openNav.addEventListener('click', () => {
+        const isOpen = sideNav.classList.contains('open');
+        if (isOpen) {
+            sideNav.classList.remove('open');
+            gsap.to(navList, { opacity: 0, duration: 0.2 });
+            if (mainContent) mainContent.classList.remove('shifted');
+        } else {
+            sideNav.classList.add('open');
+            gsap.to(navList, { 
+                opacity: 1, 
+                duration: 0.5,
+                delay: 0.2
+            });
+            if (mainContent) mainContent.classList.add('shifted');
+        }
+    });
+
+    closeNav.addEventListener('click', () => {
+        gsap.to(navList, { 
+            opacity: 0, 
+            duration: 0.2,
+            onComplete: () => {
+                sideNav.classList.remove('open');
+                if (mainContent) mainContent.classList.remove('shifted');
+            }
+        });
+    });
+
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                if (entry.target.classList.contains('card')) {
+                    gsap.to(entry.target, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    });
+                } else if (entry.target.classList.contains('team-member')) {
+                    gsap.to(entry.target, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    });
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    // Observe elements for scroll animations
+    document.querySelectorAll('.card, .team-member').forEach(el => {
+        observer.observe(el);
+    });
+  </script>
+</body>
+</html>

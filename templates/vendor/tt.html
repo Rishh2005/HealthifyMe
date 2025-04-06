@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tongue Twisters Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+            background-color: #eef2f3;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .tongue-twister-container {
+            margin-top: 20px;
+        }
+
+        .tongue-twister {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="gameContent"></div>
+    </div>
+
+    <script>
+        function initializeTongueTwisters() {
+            const tongueTwisters = [
+                "How much wood would a woodchuck chuck if a woodchuck could chuck wood?",
+                "She sells seashells by the seashore.",
+                "Peter Piper picked a peck of pickled peppers.",
+                "Betty Botter bought some butter but she said the butter's bitter.",
+                "I scream, you scream, we all scream for ice cream."
+            ];
+
+            gameState.currentTwister = tongueTwisters[Math.floor(Math.random() * tongueTwisters.length)];
+
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <div class="tongue-twister-container">
+                    <p class="tongue-twister">${gameState.currentTwister}</p>
+                    <button class="btn" onclick="completeTongueTwister()">I said it!</button>
+                </div>
+            `;
+        }
+
+        function completeTongueTwister() {
+            updateStats(3);
+            initializeTongueTwisters(); // Refreshes the game by reinitializing
+        }
+
+        // Helper functions
+        function updateStats(points) {
+            console.log(`You earned ${points} points!`);
+        }
+
+        // Game state
+        const gameState = {};
+
+        // Initialize the game on page load
+        document.addEventListener('DOMContentLoaded', initializeTongueTwisters);
+    </script>
+</body>
+</html>

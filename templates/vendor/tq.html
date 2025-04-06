@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .game-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .trivia-quiz {
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px 5px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeTriviaQuiz() {
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                options: ["London", "Berlin", "Paris", "Madrid"],
+                answer: 2
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                answer: 1
+            },
+            {
+                question: "Who painted the Mona Lisa?",
+                options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+                answer: 2
+            },
+            {
+                question: "What is the largest mammal in the world?",
+                options: ["African Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
+                answer: 1
+            },
+            {
+                question: "Which element has the chemical symbol 'O'?",
+                options: ["Gold", "Silver", "Oxygen", "Iron"],
+                answer: 2
+            }
+        ];
+
+        gameState.questions = questions;
+        gameState.currentQuestion = 0;
+        gameState.score = 0;
+
+        showNextQuestion();
+    }
+
+    function showNextQuestion() {
+        const questions = gameState.questions;
+
+        if (gameState.currentQuestion >= questions.length) {
+            endTriviaQuiz();
+            return;
+        }
+
+        const question = questions[gameState.currentQuestion];
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="trivia-quiz">
+                <p>${question.question}</p>
+                ${question.options.map((option, index) => `
+                    <button class="btn" onclick="answerTrivia(${index})">${option}</button>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function answerTrivia(selectedIndex) {
+        const question = gameState.questions[gameState.currentQuestion];
+        if (selectedIndex === question.answer) {
+            gameState.score++;
+        }
+        gameState.currentQuestion++;
+        showNextQuestion();
+    }
+
+    function endTriviaQuiz() {
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <h2>Trivia Quiz</h2>
+            <div class="trivia-quiz">
+                <p>You scored ${gameState.score} out of ${gameState.questions.length}!</p>
+            </div>
+        `;
+        updateStats(5);
+        setTimeout(backToMenu, 1500);
+    }
+
+    // Helper functions
+    function updateStats(points) {
+        console.log(`You earned ${points} points!`);
+    }
+
+    // Game state
+    const gameState = {};
+
+    // Initialize the game on page load
+    document.addEventListener("DOMContentLoaded", initializeTriviaQuiz);
+</script>
+</body>
+</html>

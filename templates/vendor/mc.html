@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .game-container {
+            max-width: 555px;
+            width: 100%;
+            height: 400px;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .math-challenge {
+            text-align: center;
+        }
+
+        .math-problem {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #mathAnswer {
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            width: 50%;
+        }
+
+        .btn {
+            background-color: #38bdf8;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+<!-- Large Game Container -->
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeMathChallenge() {
+        const operators = ['+', '-', '*'];
+        const a = Math.floor(Math.random() * 10) + 1;
+        const b = Math.floor(Math.random() * 10) + 1;
+        const operator = operators[Math.floor(Math.random() * operators.length)];
+        const problem = `${a} ${operator} ${b}`;
+        const answer = eval(problem);
+
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="math-challenge">
+                <p class="math-problem">${problem} = ?</p>
+                <input type="number" id="mathAnswer" placeholder="Enter your answer">
+                <button class="btn" onclick="checkMathAnswer(${answer})">Submit</button>
+            </div>
+        `;
+    }
+
+    function checkMathAnswer(correctAnswer) {
+        const userAnswer = parseInt(document.getElementById('mathAnswer').value);
+        if (userAnswer === correctAnswer) {
+            initializeMathChallenge();
+        } else {
+            alert('Try again!');
+        }
+    }
+    document.addEventListener("DOMContentLoaded", initializeMathChallenge);
+</script>
+
+</body>
+</html>

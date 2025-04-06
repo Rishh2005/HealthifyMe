@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Icon" href="styles/imgs/logo.png">
+    <link rel="stylesheet" href="../components/fixed.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>HealthifyMe HealthAnalysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f0f9ff;
+        }
+
+        .hs-header {
+            margin: 20px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .hs-header h1 {
+            font-size: 2rem;
+            color: #2564ec;
+        }
+
+        .mwh-header {
+            margin: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .mwh-header h1 {
+            font-size: 2rem;
+            color: #2564ec;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 10px;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: #ffffff;
+            background-color: #1e88e5;
+            transition: all 0.3s ease;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            margin: 0 5px;
+        }
+
+        .tab:hover {
+            background-color: #1e3a8a;
+            color: #fff;
+        }
+
+        .tab.active {
+            background-color: #1e3a8a;
+            color: #fff;
+        }
+
+        .content {
+            max-width: 1450px;
+            margin: 0 auto;
+            padding: 5px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .mwh-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(100px, 2fr));
+            text-align: center;
+            gap: 10px;
+        }
+
+        .mwh-card {
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .mwh-card h3 {
+            color: #1e3a8a;
+            font-size: 1.1rem;
+            margin-top: 15px;
+        }
+
+        .mwh-card p {
+            color: #555555;
+            margin-top: 10px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .mwh-card button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            align-self: flex-end;
+        }
+
+        .mwh-card button:hover {
+            background-color: #0056b3;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background-color: #ffffff;
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .popup-content .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .popup-content iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            margin-top: 20px;
+        }
+
+        .achievements-section {
+            margin: 3px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+
+        .achievements-section h2 {
+            color: #1e3a8a;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .achievement-card {
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            position: relative;
+            min-height: 130px;
+        }
+
+        .achievement-card h3 {
+            color: #1e3a8a;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            margin-left: 10px;
+        }
+
+        .achievement-card p {
+            color: #555555;
+            margin-top: 10px;
+            margin-left: 18px;
+        }
+
+        .achievement-card.completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .achievement-card button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 18px;
+        }
+
+        .achievement-card button:hover {
+            background-color: #0056b3;
+        }
+
+        .achievement-card.completed button {
+            background-color: #28a745;
+            cursor: default;
+        }
+
+        .achievement-card.completed button:hover {
+            background-color: #28a745;
+        }
+
+        .hs {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+
+        .calculator-section {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .speedometer-container {
+            position: relative;
+            width: 500px;
+            height: 300px;
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-radius: 40px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .speedometer-container h1 {
+            font-size: 25px;
+            color: #1e3a8a;
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        .speedometer-container canvas {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .text {
+            color: rgb(0, 0, 0);
+            font-weight: 600;
+            font-size: 24px;
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /*Sleep Metrics*/
+        .sleep-metrics-container {
+            width: 600px;
+            background: white;
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .sleep-metrics-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            justify-content: flex-start;
+        }
+
+        .sleep-metrics-header h2 {
+            color: #1e3a8a;
+            font-size: 25px;
+            font-weight: bold;
+            margin-right: 280px;
+        }
+
+        .sleep-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        .sleep-metric {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #f5fbff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sleep-metric:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.1);
+        }
+
+        .metric-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1976d2;
+            margin: 15px 0;
+        }
+
+        .metric-label {
+            color: #1976d2;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .quality-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(#1976d2 0%, #E3F2FD 0);
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 10px rgba(25, 118, 210, 0.1);
+        }
+
+        .quality-circle::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .quality-value {
+            position: relative;
+            color: #1976d2;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        /*BMI Calculator*/
+        .bmi-card {
+            width: 700px;
+            height: 400px;
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .bmi-card h1 {
+            font-size: 20px;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .bmi-card input, .bmi-card select, .bmi-card button {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: #000000;
+            border-radius: 5px;
+        }
+
+        .bmi-card input, .bmi-card select {
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            font-size: 15px;
+            width: 500px;
+        }
+
+        .bmi-card button {
+            background-color: #007bff;
+            color: rgb(255, 255, 255);
+            cursor: pointer;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        .bmi-card button:hover {
+            background-color: #1e3a8a;
+            transform: scale(1.03);
+        }
+
+        .bmi-card button:active {
+            transform: scale(0.95);
+        }
+
+        .results {
+            display: none;
+            flex: 1;
+            max-width: 400px;
+            height: fit-content;
+            margin: 20px;
+            margin-right: 100px;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .results h2 {
+            font-size: 28px;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .tdee-value {
+            font-size: 48px;
+            margin: 10px 0 30px 0;
+            font-weight: bold;
+        }
+
+        .bmi-section {
+            margin-bottom: 30px;
+        }
+
+        .bmi-value {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .category {
+            color: #FFA500;
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        .macro-section {
+            margin-bottom: 30px;
+        }
+
+        .macro-section h3 {
+            font-size: 20px;
+            margin: 0 0 20px 0;
+            font-weight: normal;
+        }
+
+        .macro-indicators {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .macro-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+
+        .indicator-box {
+            width: 30px;
+            height: 12px;
+        }
+
+        .carbs { background-color: #FF69B4; }
+        .protein { background-color: #4169E1; }
+        .fat { background-color: #FFD700; }
+
+        .macro-content {
+            display: flex;
+            gap: 40px;
+            margin: 10px;
+        }
+
+        .macro-list {
+            padding: 0px;
+        }
+
+        .macro-list li {
+            margin: 8px 0;
+            color: rgb(0, 0, 0);
+        }
+
+        .macro-chart {
+            width: 120px;
+            height: 120px;
+            margin-right: 20px;
+        }
+        
+        .bmi-chart {
+            margin-top: 30px;
+            position: relative;
+            padding-bottom: 40px; 
+        }
+
+        .bmi-chart h3 {
+            font-size: 20px;
+            margin: 0 0 20px 0;
+            font-weight: normal;
+        }
+
+        .bmi-row {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            position: relative;
+        }
+
+        .bmi-label {
+            width: 100px;
+            text-align: right;
+            padding-right: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .bmi-bar {
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .bmi-bar.underweight { background-color: #4169E1; width: 0%; }
+        .bmi-bar.normal { background-color: #32CD32; width: 0%; }
+        .bmi-bar.overweight { background-color: #FFA500; width: 0%; }
+        .bmi-bar.obese { background-color: #FF6347; width: 0%; }
+
+        .x-axis {
+            position: absolute;
+            bottom: 0;
+            left: 100px;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding-top: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .x-axis::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #666;
+        }
+
+        .x-axis span {
+            position: relative;
+        }
+
+        .x-axis span::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            width: 1px;
+            height: 5px;
+            background-color: #666;
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <button class="open-btn" id="openNav" id="closeNav"><i class="fa fa-bars"></i></button>
+        <div class="logo">
+            <img src="styles/imgs/logo.png">
+            <span>HealthifyMe</span>
+        </div>
+    </header>
+    <div class="side-nav" id="sideNav">
+        <button id="closeNav">&times;</button>
+        <ul>
+            <li><a href="db.html"><img src="styles/imgs/home.png">Dashboard</a></li>
+            <li><a href="nh.html"><img src="styles/imgs/location.png">Nearby Hospitals & Medical Shops</a></li>
+            <li><a href="hc.html"><img src="styles/imgs/healthcare.png">Health Analysis</a></li>
+            <li><a href="cc.html"><img src="styles/imgs/calories.png">Calorie Count</a></li>
+            <li><a href="rec.html"><img src="styles/imgs/health-check.png">Records</a></li>
+            <li><a href="apb.html"><img src="styles/imgs/calendar.png">Appointments</a></li>
+            <li><a href="profile.html"><img src="styles/imgs/user.png">Profile</a></li>
+            <li><a href="st.html"><img src="styles/imgs/settings.png">Settings</a></li>
+        </ul>
+    </div>
+    <main>
+    <div class="tabs">
+        <div class="tab active" data-target="health-score">Your Health Analysis</div>
+        <div class="tab" data-target="mind-games">Mental Wellness Hub</div>
+        <div class="tab" data-target="exercises">Daily Exercises</div>
+    </div>
+    <div id="health-score" class="content active">
+        <div class="hs">
+            <div class="calculator-section">
+                <div class="speedometer-container">
+                    <h1>Your Health Score</h1>
+                    <canvas id="canvas" height="175" width="350" class="m-auto">
+                    </canvas>
+                    <p class="text">0%</p>
+                </div>
+                <div class="sleep-metrics-container">
+                    <div class="sleep-metrics-header">
+                        <div class="metric-icon">
+                            <img src="styles/imgs/moon.png" style="width: 100%; height: 100%;">
+                        </div>
+                        <h2>Sleep Metrics</h2>
+                    </div>
+                    <div class="sleep-metrics-grid">
+                        <div class="sleep-metric">
+                            <div class="metric-icon">
+                                <img src="styles/imgs/wall-clock.png" style="width: 50px; height: 50px;">
+                            </div>
+                            <div class="metric-value">0h</div>
+                            <div class="metric-label">Avg Sleep Time</div>
+                        </div>
+                        <div class="sleep-metric">
+                            <div class="metric-icon">
+                                <img src="styles/imgs/bedtime.png" style="width: 100%; height: 100%;">
+                            </div>
+                            <div class="metric-value">00:00 AM</div>
+                            <div class="metric-label">Avg BedTime</div>
+                        </div>
+                        <div class="sleep-metric">
+                            <div class="metric-icon">
+                                <img src="styles/imgs/sun.png" style="width: 100%; height: 100%;">
+                            </div>
+                            <div class="metric-value">00:00 AM</div>
+                            <div class="metric-label">Avg Wakeup Time</div>
+                        </div>
+                        <div class="sleep-metric sleep-quality">
+                            <div class="metric-icon">
+                                <img src="styles/imgs/speedometer.png" style="width: 100%; height: 100%;">
+                            </div>
+                            <div class="quality-circle">
+                                <span class="quality-value">0%</span>
+                            </div>
+                            <div class="metric-label">Sleep Score</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bmi-card">
+                    <h1>TDEE, BMI, and Macronutrient Calculator</h1>
+                    <input type="number" id="age" placeholder="Age" min="1">
+                    <select id="sex">
+                        <option value="" disabled selected>Sex</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="others">Others</option>
+                    </select>
+                    <select id="activity-level">
+                        <option value="" disabled selected>Activity Level</option>
+                        <option value="sedentary">Sedentary</option>
+                        <option value="light">Light Activity</option>
+                        <option value="moderate">Moderate Activity</option>
+                        <option value="active">Active</option>
+                        <option value="very_active">Very Active</option>
+                    </select>
+                    <input type="number" id="height" placeholder="Height (cm)">
+                    <input type="number" id="weight" placeholder="Weight (kg)">
+                    <button onclick="calculate()">Calculate</button>
+                </div>
+            </div>
+            <div id="results" class="results">
+                <h2>Your TDEE:</h2>
+                <div class="tdee-value"><span id="tdee-result"> </span> calories/day</div>
+                <div class="bmi-section">
+                    <div class="bmi-value">Your BMI: <span id="bmi-result"> </span></div>
+                    <div class="category">Category: <span id="bmi-category"> </span></div>
+                </div>
+                <div class="macro-section">
+                    <h3>Recommended Daily Macronutrients:</h3>
+                    <div class="macro-indicators">
+                        <div class="macro-indicator">
+                            <div class="indicator-box carbs"> </div>
+                            <span>Carbs</span>
+                        </div>
+                        <div class="macro-indicator">
+                            <div class="indicator-box protein"> </div>
+                            <span>Protein</span>
+                        </div>
+                        <div class="macro-indicator">
+                            <div class="indicator-box fat"> </div>
+                            <span>Fat</span>
+                        </div>
+                    </div>
+                    <div class="macro-content">
+                        <svg class="macro-chart" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="white" stroke="#333" stroke-width="2"/>
+                            <path id="carbs-arc" fill="none" stroke="#FF69B4" stroke-width="15"/>
+                            <path id="protein-arc" fill="none" stroke="#4169E1" stroke-width="15"/>
+                            <path id="fat-arc" fill="none" stroke="#FFD700" stroke-width="15"/>
+                        </svg>
+                        <ul class="macro-list">
+                            <li>Carbs: <span id="carbs-result">0g (0%)</span></li>
+                            <li>Protein: <span id="protein-result">0g (0%)</span></li>
+                            <li>Fat: <span id="fat-result">0g (0%)</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bmi-chart">
+                    <h3>BMI Chart:</h3>
+                    <div class="bmi-row">
+                        <div class="bmi-label">Underweight</div>
+                        <div class="bmi-bar underweight"></div>
+                    </div>
+                    <div class="bmi-row">
+                        <div class="bmi-label">Normal</div>
+                        <div class="bmi-bar normal"></div>
+                    </div>
+                    <div class="bmi-row">
+                        <div class="bmi-label">Overweight</div>
+                        <div class="bmi-bar overweight"></div>
+                    </div>
+                    <div class="bmi-row">
+                        <div class="bmi-label">Obese</div>
+                        <div class="bmi-bar obese"></div>
+                    </div>
+                    <div class="x-axis">
+                        <span>0</span>
+                        <span>10</span>
+                        <span>20</span>
+                        <span>30</span>
+                        <span>40</span>
+                    </div>
+                </div>
+                <div class="footer-text">Macros based on a 40/30/30 (carbs/protein/fat) ratio. Adjust as needed for your specific goals.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="mind-games" class="content">
+        <div class="mwh-header">
+            <h1>🎮 Fun Mental Wellness Hub</h1>
+        </div>
+        <div class="mwh-grid">
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🎯</span>
+                <h3>Memory Match</h3>
+                <p>Train your brain with this fun matching game</p>
+                <button class="game-button" data-game-url="vendor/mm.html">Start</button>
+            </div>  
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🫧</span>
+                <h3>Bubble Pop</h3>
+                <p>Pop virtual bubble wrap for instant stress relief</p>
+                <button class="game-button" data-game-url="vendor/bp.html">Start</button>
+            </div>
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">📝</span>
+                <h3>Word Unscramble</h3>
+                <p>Test your vocabulary with scrambled positive words</p>
+                <button class="game-button" data-game-url="vendor/wu.html">Start</button>
+            </div>
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🎨</span>
+                <h3>Color Match</h3>
+                <p>Match colors to improve focus and concentration</p>
+                <button class="game-button" data-game-url="vendor/cm.html">Start</button>
+            </div>
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🧮</span>
+                <h3>Math Challenge</h3>
+                <p>Solve quick math problems to boost your numeracy</p>
+                <button class="game-button" data-game-url="vendor/mc.html">Start</button>
+            </div>
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🔍</span>
+                <h3>Pattern Recognition</h3>
+                <p>Identify patterns to enhance your cognitive skills</p>
+                <button class="game-button" data-game-url="vendor/pr.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">⚡</span>
+                <h3>Reaction Time</h3>
+                <p>Test and improve your reaction speed</p>
+                <button class="game-button" data-game-url="vendor/rt.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🔊</span>
+                <h3>Simon Says</h3>
+                <p>Follow the sequence to boost your memory</p>
+                <button class="game-button" data-game-url="vendor/ss.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🔢</span>
+                <h3>Sudoku</h3>
+                <p>Classic number puzzle to challenge your logic</p>
+                <button class="game-button" data-game-url="vendor/sdk.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🧩</span>
+                <h3>Jigsaw Puzzle</h3>
+                <p>Piece together images to improve spatial reasoning</p>
+                <button class="game-button" data-game-url="vendor/jp.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🔤</span>
+                <h3>Anagrams</h3>
+                <p>Form words from jumbled letters</p>
+                <button class="game-button" data-game-url="vendor/ag.html">Start</button>
+            </div>   
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">👁️</span>
+                <h3>Spot the Difference</h3>
+                <p>Find differences between two similar images</p>
+                <button class="game-button" data-game-url="vendor/std.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">❓</span>
+                <h3>Trivia Quiz</h3>
+                <p>Test your knowledge on various topics</p>
+                <button class="game-button" data-game-url="vendor/tq.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🌀</span>
+                <h3>Maze Runner</h3>
+                <p>Navigate through increasingly complex mazes</p>
+                <button class="game-button" data-game-url="vendor/mr.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🔢</span>
+                <h3>Memory Sequence</h3>
+                <p>Remember and repeat growing number sequences</p>
+                <button class="game-button" data-game-url="vendor/ms.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🧠</span>
+                <h3>Riddles</h3>
+                <p>Solve mind-bending riddles</p>
+                <button class="game-button" data-game-url="vendor/rd.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">👅</span>
+                <h3>Tongue Twisters</h3>
+                <p>Practice pronunciation with fun phrases</p>
+                <button class="game-button" data-game-url="vendor/tt.html">Start</button>
+            </div>
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🧘</span>
+                <h3>Guided Meditation</h3>
+                <p>Relax and focus with guided meditation</p>
+                <button class="game-button" data-game-url="vendor/gm.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">🌬️</span>
+                <h3>Breathing Exercise</h3>
+                <p>Learn and practice calming breathing techniques</p>
+                <button class="game-button" data-game-url="vendor/be.html">Start</button>
+            </div> 
+            <div class="mwh-card" id="mwh1">
+                <span style="font-size: 3rem; margin-top: 10px;">💖</span>
+                <h3>Positive Affirmations</h3>
+                <p>Boost your mood with positive self-talk</p>
+                <button class="game-button" data-game-url="vendor/pa.html">Start</button>
+            </div> 
+        </div>
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <span class="close-btn">&times;</span>
+                <h2 id="game-title"></h2>
+                <iframe id="game-frame" src="" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+    <div id="exercises" class="content">
+        <div class="mwh-header">
+            <h1>Complete your Daily Exercises</h1>
+        </div>
+        <div class="achievement-grid">
+            <div class="achievement-card" id="achievement6">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-brain" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #16b8a6"></i>
+                    <h3>Meditation Challenge</h3>
+                </div>
+                <p>Complete a 5-minute guided meditation</p>
+                <button onclick="markAsCompleted('achievement6')">Complete</button>
+            </div>
+            <div class="achievement-card" id="achievement9">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-person-walking" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #ef5050"></i>
+                    <h3>10,000 Steps</h3>
+                </div>
+                <p>Walk 10,000 Steps in a Day</p>
+                <button onclick="markAsCompleted('achievement9')">Complete</button>
+            </div>
+            <div class="achievement-card" id="achievement10">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-dumbbell" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #ec5ea4"></i>
+                    <h3>Yoga Session</h3>
+                </div>
+                <p>Complete a 15-minutes yoga routine</p>
+                <button onclick="markAsCompleted('achievement10')">Complete</button>
+            </div>
+            <div class="achievement-card" id="achievement11">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-dumbbell" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #f8771e"></i>
+                    <h3>Surya Namaskar</h3>
+                </div>
+                <p>Complete 10 rounds of Sun Salutation</p>
+                <button onclick="markAsCompleted('achievement11')">Complete</button>
+            </div>
+            <div class="achievement-card" id="achievement12">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-brain" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #a856f7"></i>
+                    <h3>Meditation</h3>
+                </div>
+                <p>Practice Mindfulness for 10 minutes</p>
+                <button onclick="markAsCompleted('achievement12')">Complete</button>
+            </div>
+            <div class="achievement-card" id="achievement13">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-dumbbell" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #4bce7b"></i>
+                    <h3>Tadasana</h3>
+                </div>
+                <p>Mountain Pose for 1 minute</p>
+                <button onclick="markAsCompleted('achievement13')">Complete</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="left">
+          <p>© 2025 HealthifyMe. All rights reserved.</p>
+        </div>
+        <div class="right">
+            <div class="language-select">
+                <label for="language">Language: </label>
+                <select id="language">
+                  <option value="en">English</option>
+                </select>
+            </div>
+            <a href="au.html">About Us</a>
+            <a href="#">Meet Our Team</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+    </footer>
+    <script>
+        const sideNav = document.getElementById('sideNav');
+        const openNav = document.getElementById('openNav');
+        const closeNav = document.getElementById('closeNav');
+        const mainContent = document.getElementById('mainContent');
+
+        openNav.addEventListener('click', () => {
+            const isOpen = sideNav.classList.contains('open');
+            if (isOpen) {
+                sideNav.classList.remove('open');
+                mainContent.classList.remove('shifted');
+            } else {
+                sideNav.classList.add('open');
+                mainContent.classList.add('shifted');
+            }
+        });
+
+        closeNav.addEventListener('click', () => {
+            sideNav.classList.remove('open');
+            mainContent.classList.remove('shifted');
+        });
+        
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelectorAll('.content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.target).classList.add('active');
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const gameButtons = document.querySelectorAll(".game-button");
+            const popup = document.getElementById("popup");
+            const gameFrame = document.getElementById("game-frame");
+            const closePopup = popup.querySelector(".close-btn");
+
+            // Add click event to each game button
+            gameButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const gameUrl = button.getAttribute("data-game-url");
+                    const gameTitle = button.parentElement.querySelector("h3").textContent;
+                    gameFrame.src = gameUrl;
+                    document.getElementById("game-title").textContent = gameTitle; 
+                    popup.style.display = "flex";
+                });
+            });
+
+            // Close the popup
+            closePopup.addEventListener("click", () => {
+                popup.style.display = "none";
+                gameFrame.src = "";
+            });
+        });
+
+        function markAsCompleted(id) {
+            const card = document.getElementById(id);
+            if (!card.classList.contains('completed')) {
+                card.classList.add('completed');
+                const button = card.querySelector('button');
+                button.textContent = 'Completed';
+                button.disabled = true;
+            }
+        }
+
+        let totalRot = ((10 / 100) * 180 * Math.PI) / 180; // Insert Value of Health Score
+        let rotation = 0;
+        let doAnim = true;
+        let canvas = null;
+        let ctx = null;
+        let text = document.querySelector(".text");
+        canvas = document.getElementById("canvas");
+        ctx = canvas.getContext("2d");
+        setTimeout(requestAnimationFrame(animate), 1500);
+
+        function calcPointsCirc(cx, cy, rad, dashLength) {
+        var n = rad / dashLength,
+            alpha = (Math.PI * 2) / n,
+            pointObj = {},
+            points = [],
+            i = -1;
+
+        while (i < n) {
+            var theta = alpha * i,
+            theta2 = alpha * (i + 1);
+
+            points.push({
+            x: Math.cos(theta) * rad + cx,
+            y: Math.sin(theta) * rad + cy,
+            ex: Math.cos(theta2) * rad + cx,
+            ey: Math.sin(theta2) * rad + cy
+            });
+            i += 2;
+        }
+        return points;
+        }
+        function animate() {
+        //Clearing animation on every iteration
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const center = {
+            x: 175,
+            y: 175
+        };
+
+        //main arc
+        ctx.beginPath();
+        ctx.strokeStyle = rotation >= 0.75 * Math.PI ? "#00FF14" : "#35FFFF";
+        ctx.lineWidth = "3";
+        let radius = 174;
+        ctx.arc(center.x, center.y, radius, Math.PI, Math.PI + rotation);
+        ctx.stroke();
+
+        //Red Arc
+        if (rotation <= 0.75 * Math.PI) {
+            ctx.beginPath();
+            ctx.strokeStyle = "#00FF14";
+            ctx.lineWidth = "3";
+            ctx.arc(center.x, center.y, radius, 1.75 * Math.PI, 0);
+            ctx.stroke();
+        }
+
+        //functions to draw dotted lines
+        const DrawDottedLine = (x1, y1, x2, y2, dotRadius, dotCount, dotColor) => {
+            var dx = x2 - x1;
+            var dy = y2 - y1;
+            let slopeOfLine = dy / dx;
+            var degOfLine =
+            Math.atan(slopeOfLine) * (180 / Math.PI) > 0
+                ? Math.atan(slopeOfLine) * (180 / Math.PI)
+                : 180 + Math.atan(slopeOfLine) * (180 / Math.PI);
+            var degOfNeedle = rotation * (180 / Math.PI);
+
+            if (rotation >= 0.75 * Math.PI) {
+            dotColor = degOfLine <= degOfNeedle ? "#00FF14" : "#f97272";
+            } else {
+            dotColor = degOfLine <= degOfNeedle ? dotColor : "#aad4d4";
+            }
+            var spaceX = dx / (dotCount - 1);
+            var spaceY = dy / (dotCount - 1);
+            var newX = x1;
+            var newY = y1;
+            for (var i = 0; i < dotCount; i++) {
+            dotRadius = dotRadius >= 0.75 ? dotRadius - i * (0.5 / 15) : dotRadius;
+            drawDot(newX, newY, dotRadius, `${dotColor}${100 - (i + 1)}`);
+            newX += spaceX;
+            newY += spaceY;
+            }
+        };
+        const drawDot = (x, y, dotRadius, dotColor) => {
+            ctx.beginPath();
+            ctx.arc(x, y, dotRadius, 0, 2 * Math.PI, false);
+            ctx.fillStyle = dotColor;
+            ctx.fill();
+        };
+        let firstDottedLineDots = calcPointsCirc(center.x, center.y, 165, 1);
+        for (let k = 0; k < firstDottedLineDots.length; k++) {
+            let x = firstDottedLineDots[k].x;
+            let y = firstDottedLineDots[k].y;
+            DrawDottedLine(x, y, 175, 175, 1.75, 30, "#35FFFF");
+        }
+
+        //dummy circle to hide the line connecting to center
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, 80, 2 * Math.PI, 0);
+        ctx.fillStyle = "white";
+        ctx.fill();
+
+        //Speedometer triangle
+        var x = -75,
+            y = 0;
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(175, 175);
+        ctx.rotate(rotation);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 10, y - 10);
+        ctx.lineTo(x + 10, y + 10);
+        ctx.closePath();
+        ctx.fillStyle = rotation >= 0.75 * Math.PI ? "#00FF14" : "#35FFFF";
+        ctx.fill();
+        ctx.restore();
+        if (rotation < totalRot) {
+            rotation += (1 * Math.PI) / 180;
+            if (rotation > totalRot) {
+            rotation -= (1 * Math.PI) / 180;
+            }
+        }
+
+        text.innerHTML = Math.round((rotation / Math.PI) * 100) + 0 + "%";
+        requestAnimationFrame(animate);
+        }
+
+        function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+            const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+            return {
+                x: centerX + (radius * Math.cos(angleInRadians)),
+                y: centerY + (radius * Math.sin(angleInRadians))
+            };
+        }
+
+        function describeArc(x, y, radius, startAngle, endAngle) {
+            const start = polarToCartesian(x, y, radius, endAngle);
+            const end = polarToCartesian(x, y, radius, startAngle);
+            const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+            return [
+                "M", start.x, start.y,
+                "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
+            ].join(" ");
+        }
+
+        function updateDonutChart(carbsPerc, proteinPerc, fatPerc) {
+            const radius = 40;
+            const center = 50;
+            
+            let startAngle = 0;
+            
+            document.getElementById('carbs-arc').setAttribute('d', 
+                describeArc(center, center, radius, startAngle, startAngle + (carbsPerc/100 * 360)));
+            
+            startAngle += (carbsPerc/100 * 360);
+            document.getElementById('protein-arc').setAttribute('d', 
+                describeArc(center, center, radius, startAngle, startAngle + (proteinPerc/100 * 360)));
+            
+            startAngle += (proteinPerc/100 * 360);
+            document.getElementById('fat-arc').setAttribute('d', 
+                describeArc(center, center, radius, startAngle, startAngle + (fatPerc/100 * 360)));
+        }
+
+        function calculate() {
+            // Previous calculation logic remains the same
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const age = parseInt(document.getElementById('age').value);
+            const sex = document.getElementById('sex').value;
+            const activityLevel = document.getElementById('activity-level').value;
+
+            if (!height || !weight || !age || !sex || !activityLevel) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const heightInMeters = height / 100;
+            const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+            const categories = ["Underweight", "Normal", "Overweight", "Obese"];
+            const bmiCategory = bmi < 18.5 ? categories[0] : bmi < 25 ? categories[1] : bmi < 30 ? categories[2] : categories[3];
+
+            const bmr = sex === 'male'
+                ? 10 * weight + 6.25 * height - 5 * age + 5
+                : 10 * weight + 6.25 * height - 5 * age - 161;
+
+            const activityMultipliers = {
+                sedentary: 1.2,
+                light: 1.375,
+                moderate: 1.55,
+                active: 1.725,
+                very_active: 1.9
+            };
+
+            const tdee = (bmr * activityMultipliers[activityLevel]).toFixed(0);
+
+            document.getElementById('tdee-result').textContent = tdee;
+            document.getElementById('bmi-result').textContent = bmi;
+            document.getElementById('bmi-category').textContent = bmiCategory;
+
+            const carbsPerc = 40;
+            const proteinPerc = 30;
+            const fatPerc = 35;
+
+            const carbs = Math.round((carbsPerc/100 * tdee) / 4);
+            const protein = Math.round((proteinPerc/100 * tdee) / 4);
+            const fat = Math.round((fatPerc/100 * tdee) / 9);
+
+            document.getElementById('carbs-result').textContent = `${carbs}g (${carbsPerc}%)`;
+            document.getElementById('protein-result').textContent = `${protein}g (${proteinPerc}%)`;
+            document.getElementById('fat-result').textContent = `${fat}g (${fatPerc}%)`;
+
+            updateDonutChart(carbsPerc, proteinPerc, fatPerc);
+            document.getElementById('results').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

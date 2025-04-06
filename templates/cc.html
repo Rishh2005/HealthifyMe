@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="Icon" href="styles/imgs/logo.png">
+  <link rel="stylesheet" href="../components/fixed.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../components/chb.css">
+  <title>HealthifyMe Food Calorie Calculator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      background-color: #f0f9ff;
+    }
+
+    .page-header {
+      margin: 30px 2rem 0;
+      text-align: left;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #2564ec;
+    }
+
+    .main-content {
+      margin: 20px 2rem;
+    }
+
+    .card {
+      background-color: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: #1e3a8a;
+    }
+
+    .upload-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      border: 2px dashed #2564ec;
+      border-radius: 8px;
+      background-color: #f8fbff;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-area:hover {
+      background-color: #e6f0ff;
+    }
+
+    .upload-area img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1rem;
+    }
+
+    .upload-area p {
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .upload-area input {
+      display: none;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+      background-color: #2564ec;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #1e3a8a;
+    }
+
+    .btn-secondary {
+      background-color: #fff;
+      color: #2564ec;
+      border: 1px solid #2564ec;
+    }
+
+    .btn-secondary:hover {
+      background-color: #f0f9ff;
+    }
+
+    .preview-area {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .preview-area img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .result-area {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .result-area h3 {
+      margin-bottom: 0.5rem;
+      color: #1e3a8a;
+    }
+
+    .food-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .food-name {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .food-calorie {
+      font-weight: 600;
+      color: #2564ec;
+    }
+
+    .total-calories {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      background-color: #e6f0ff;
+      border-radius: 6px;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .recent-logs {
+      margin-top: 2rem;
+    }
+
+    .log-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .log-date {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .log-details {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .log-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    .log-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .log-title {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .log-calorie {
+      font-weight: 600;
+      color: #2564ec;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-left-color: #2564ec;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .btn-container {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <button class="open-btn" id="openNav" id="closeNav"><i class="fa fa-bars"></i></button>
+    <div class="logo">
+        <a href="../index.html"><img src="styles/imgs/logo.png" alt="HealthifyMe Logo"></a>
+        <span>HealthifyMe</span>
+    </div>
+  </header>
+  <div class="side-nav" id="sideNav">
+    <button id="closeNav">&times;</button>
+    <ul>
+        <li><a href="db.html"><img src="styles/imgs/home.png">Dashboard</a></li>
+        <li><a href="nh.html"><img src="styles/imgs/location.png">Nearby Hospitals & Medical Shops</a></li>
+        <li><a href="hc.html"><img src="styles/imgs/healthcare.png">Health Analysis</a></li>
+        <li><a href="cc.html"><img src="styles/imgs/calories.png">Calorie Count</a></li>
+        <li><a href="rec.html"><img src="styles/imgs/health-check.png">Records</a></li>
+        <li><a href="apb.html"><img src="styles/imgs/calendar.png">Appointments</a></li>
+        <li><a href="profile.html"><img src="styles/imgs/user.png">Profile</a></li>
+        <li><a href="st.html"><img src="styles/imgs/settings.png">Settings</a></li>
+    </ul>
+  </div>
+
+  <main id="mainContent">
+    <div class="page-header">
+      <h1>Food Calorie Calculator</h1>
+    </div>
+    <div class="main-content">
+      <div class="card">
+        <h2>Analyze Your Food</h2>
+        <div class="upload-area" id="uploadArea">
+          <img src="styles/imgs/meal.png" alt="Camera Icon">
+          <p>Take a photo or upload an image of your food</p>
+          <input type="file" id="fileInput" accept="image/*">
+          <div class="btn-container">
+            <button class="btn btn-primary" id="captureBtn">
+              <i class="fa fa-camera"></i> Take Photo
+            </button>
+            <button class="btn btn-secondary" id="uploadBtn">
+              <i class="fa fa-upload"></i> Upload Image
+            </button>
+          </div>
+        </div>
+        
+        <div class="loading" id="loadingArea">
+          <div class="spinner"></div>
+          <p>Analyzing your food...</p>
+        </div>
+
+        <div class="preview-area" id="previewArea">
+          <img id="previewImage" src="" alt="Food Preview">
+          <div class="btn-container">
+            <button class="btn btn-primary" id="analyzeBtn">
+              <i class="fa fa-calculator"></i> Calculate Calories
+            </button>
+            <button class="btn btn-secondary" id="retakeBtn">
+              <i class="fa fa-refresh"></i> Retake Photo
+            </button>
+          </div>
+        </div>
+
+        <div class="result-area" id="resultArea">
+          <h3>Identified Food Items</h3>
+          <div class="food-list" id="foodList">
+            <!-- Food items will be added here -->
+          </div>
+          <div class="total-calories">
+            <span>Total Calories</span>
+            <span id="totalCalories">0 kcal</span>
+          </div>
+          <div class="btn-container" style="margin-top: 1rem;">
+            <button class="btn btn-primary" id="saveBtn">
+              <i class="fa fa-check"></i> Add to Daily Log
+            </button>
+            <button class="btn btn-secondary" id="cancelBtn">
+              <i class="fa fa-times"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card recent-logs">
+        <h2>Recent Food Logs</h2>
+        <div class="log-list" id="logList">
+          <div class="log-item">
+            <div class="log-details">
+              <img class="log-image" src="">
+              <div class="log-info">
+                <span class="log-title"></span>
+                <span class="log-date"></span>
+              </div>
+            </div>
+            <span class="log-calorie"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="left">
+      <p>© 2025 HealthifyMe. All rights reserved.</p>
+    </div>
+    <div class="right">
+        <div class="language-select">
+            <label for="language">Language: </label>
+            <select id="language">
+              <option value="en">English</option>
+            </select>
+        </div>
+        <a href="au.html">About Us</a>
+        <a href="#">Meet Our Team</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+    </div>
+  </footer>
+
+  <!-- ChatBot -->
+  <button class="chatbot-toggler">
+    <img src="styles/imgs/chat-bubble.png" alt="Chat Icon">
+    <span class="material-symbols-outlined">✖</span>
+  </button>
+  <div class="chatbot">
+    <header>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        <img src="styles/imgs/joyful.png" alt="Chatbot Logo" style="width: 40px; height: 40px; margin-right: 10px;">
+      <h2 style="margin: 0;">HealthifyMe Bot</h2>
+      <span class="close-btn material-symbols-outlined">✖</span>
+    </header>
+    <ul class="chatbox">
+      <li class="chat incoming">
+        <span class="material-symbols-outlined">HC</span>
+        <p>Hello! <br>I'm your HealthifyMe AI assistant. How can I help you today?<br><br>You can ask me about:<br><br>1. Your health records<br><br>2. Appointment scheduling<br><br>3. General health advice<br><br>4. HealthifyMe features<br><br>What would you like to know?</p>
+      </li>
+    </ul>
+    <div class="chat-input">
+      <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
+      <span id="send-btn" class="material-symbols-rounded">➤</span>
+    </div>
+  </div>
+
+  <script>
+    const sideNav = document.getElementById('sideNav');
+    const openNav = document.getElementById('openNav');
+    const closeNav = document.getElementById('closeNav');
+    const mainContent = document.getElementById('mainContent')
+    openNav.addEventListener('click', () => {
+        const isOpen = sideNav.classList.contains('open');
+        if (isOpen) {
+            sideNav.classList.remove('open');
+            mainContent.classList.remove('shifted');
+        } else {
+            sideNav.classList.add('open');
+            mainContent.classList.add('shifted');
+        }
+    });
+
+    closeNav.addEventListener('click', () => {
+        sideNav.classList.remove('open');
+        mainContent.classList.remove('shifted');
+    });
+
+    const chatbotToggler = document.querySelector(".chatbot-toggler");
+    const closeBtn = document.querySelector(".close-btn");
+    const chatbox = document.querySelector(".chatbox");
+    const chatInput = document.querySelector(".chat-input textarea");
+    const sendChatBtn = document.querySelector(".chat-input span");
+
+    let userMessage = null;
+    const inputInitHeight = chatInput.scrollHeight;
+
+    // API configuration
+    const API_KEY = "AIzaSyC9dMhwXC4Wi4OjN8_jrzeOVeI-kkjxQ-A";
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+    const createChatLi = (message, className) => {
+      const chatLi = document.createElement("li");
+      chatLi.classList.add("chat", `${className}`);
+      let chatContent = className === "outgoing" ? `<p></p>` : `<span class="material-symbols-outlined">HC</span><p></p>`;
+      chatLi.innerHTML = chatContent;
+      chatLi.querySelector("p").textContent = message;
+      return chatLi;
+    };
+
+    const generateResponse = async (chatElement) => {
+      const messageElement = chatElement.querySelector("p");
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: userMessage }],
+            },
+          ],
+        }),
+      };
+
+      try {
+        const response = await fetch(API_URL, requestOptions);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error.message);
+
+        messageElement.textContent = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1");
+      } catch (error) {
+        messageElement.classList.add("error");
+        messageElement.textContent = error.message;
+      } finally {
+        chatbox.scrollTo(0, chatbox.scrollHeight);
+      }
+    };
+
+    const handleChat = () => {
+      userMessage = chatInput.value.trim(); 
+      if (!userMessage) return;
+
+      chatInput.value = "";
+      chatInput.style.height = `${inputInitHeight}px`;
+      chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+      chatbox.scrollTo(0, chatbox.scrollHeight);
+
+      setTimeout(() => {
+        const incomingChatLi = createChatLi("Thinking...", "incoming");
+        chatbox.appendChild(incomingChatLi);
+        chatbox.scrollTo(0, chatbox.scrollHeight);
+        generateResponse(incomingChatLi);
+      }, 600);
+    };
+
+    chatInput.addEventListener("input", () => {
+      chatInput.style.height = `${inputInitHeight}px`;
+      chatInput.style.height = `${chatInput.scrollHeight}px`;
+    });
+
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
+        e.preventDefault();
+        handleChat();
+      }
+    });
+    
+    sendChatBtn.addEventListener("click", handleChat);
+    closeBtn.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
+    chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
+
+    const CLARIFAI_API_KEY = "528a5fb0c78946d9ac581bd1339d59b0";  
+
+    document.getElementById("fileInput").addEventListener("change", function (event) {
+        processImage(event.target.files[0]);
+    });
+
+    document.getElementById("captureBtn").addEventListener("click", function () {
+        document.getElementById("fileInput").click();
+    });
+
+    document.getElementById("uploadBtn").addEventListener("click", function () {
+        document.getElementById("fileInput").click();
+    });
+
+    async function processImage(file) {
+        if (!file) return;
+
+        // Show preview
+        const previewArea = document.getElementById("previewArea");
+        const previewImage = document.getElementById("previewImage");
+        previewImage.src = URL.createObjectURL(file);
+        previewArea.style.display = "block";
+
+        // Show loading animation
+        document.getElementById("loadingArea").style.display = "block";
+
+        // Convert image to base64
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async function () {
+            const base64Image = reader.result.split(",")[1]; // Extract base64 content
+
+            // Call Clarifai API for food detection
+            const response = await fetch("https://api.clarifai.com/v2/models/bd367be194cf45149e75f01d59f77ba7/outputs", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Key ${CLARIFAI_API_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    inputs: [
+                        {
+                            data: {
+                                image: {
+                                    base64: base64Image
+                                }
+                            }
+                        }
+                    ]
+                })
+            });
+
+            const data = await response.json();
+            document.getElementById("loadingArea").style.display = "none";
+
+            if (data.outputs) {
+                const foodItems = data.outputs[0].data.concepts;
+                displayResults(foodItems);
+            } else {
+                alert("Unable to identify food items. Please try again.");
+            }
+        };
+    }
+
+    function displayResults(foodItems) {
+        const foodList = document.getElementById("foodList");
+        foodList.innerHTML = "";
+
+        let totalCalories = 0;
+
+        foodItems.forEach((food) => {
+            const estimatedCalories = estimateCalories(food.name); // Estimating calories
+            totalCalories += estimatedCalories;
+
+            const item = document.createElement("div");
+            item.classList.add("food-item");
+            item.innerHTML = `<span class="food-name">${food.name}</span>
+                            <span class="food-calorie">${estimatedCalories} kcal</span>`;
+            foodList.appendChild(item);
+        });
+
+        document.getElementById("totalCalories").textContent = `${totalCalories.toFixed(2)} kcal`;
+        document.getElementById("resultArea").style.display = "block";
+    }
+
+    // Basic calorie estimation function (for demo purposes)
+    function estimateCalories(foodName) {
+        const calorieDatabase = {
+            "apple": 52,
+            "banana": 89,
+            "cheese": 402,
+            "bread": 265,
+            "burger": 295,
+            "pizza": 266,
+            "rice": 130,
+            "salad": 33
+        };
+        return calorieDatabase[foodName.toLowerCase()] || 100; // Default to 100 kcal if unknown
+    }
+
+    </script>
+</body>
+</html>

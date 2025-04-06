@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riddles Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+            background-color: #f9f9f9;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .riddle-container {
+            margin-top: 20px;
+        }
+
+        .riddle {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="gameContent"></div>
+    </div>
+
+    <script>
+        function initializeRiddles() {
+            const riddles = [
+                { question: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?", answer: "echo" },
+                { question: "You see a boat filled with people. It has not sunk, but when you look again you don't see a single person on the boat. Why?", answer: "all the people were married" },
+                { question: "What has keys, but no locks; space, but no room; you can enter, but not go in?", answer: "keyboard" },
+                { question: "What gets wet while drying?", answer: "towel" },
+                { question: "I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?", answer: "map" }
+            ];
+
+            gameState.currentRiddle = riddles[Math.floor(Math.random() * riddles.length)];
+
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <div class="riddle-container">
+                    <p class="riddle">${gameState.currentRiddle.question}</p>
+                    <input type="text" id="riddleAnswer" placeholder="Enter your answer">
+                    <button class="btn" onclick="checkRiddleAnswer()">Submit</button>
+                </div>
+            `;
+        }
+
+        function checkRiddleAnswer() {
+            const userAnswer = document.getElementById('riddleAnswer').value.toLowerCase().trim();
+            if (userAnswer === gameState.currentRiddle.answer) {
+                updateStats(5);
+                alert('Correct! You solved the riddle!');
+                setTimeout(backToMenu, 1500);
+            } else {
+                alert('That\'s not quite right. Try again!');
+            }
+        }
+
+        // Helper functions
+        function updateStats(points) {
+            console.log(`You earned ${points} points!`);
+        }
+
+        function backToMenu() {
+            console.log('Returning to menu...');
+            // Replace this with your menu navigation logic
+        }
+
+        // Game state
+        const gameState = {};
+
+        // Initialize the game on page load
+        document.addEventListener('DOMContentLoaded', initializeRiddles);
+    </script>
+</body>
+</html>

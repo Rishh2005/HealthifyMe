@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Icon" href="styles/imgs/logo.png">
+    <link rel="stylesheet" href="../components/fixed.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>HealthifyMe User-Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f0f9ff;
+        }
+
+        .apb-header {
+            margin: 30px 2rem 0;
+            text-align: left;
+        }
+
+        h1 {
+            margin-left: 5%;
+            font-size: 2rem;
+            color: #2564ec;
+        }
+
+        .container {
+            max-width: 1444px;
+            margin: 30px;
+            margin-left: 5%;
+            padding: 10px;
+        }
+
+        .row {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-height: 300px;
+        }
+
+        .hs-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            margin-left: 2%;
+        }
+
+        .ds-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+        .card i {
+            margin: 4px;
+            color: #007bff;
+        }
+
+        .card strong {
+            color: #1e3a8a;
+        }
+
+        .card p {
+            margin: 20px;
+            color: #0f4d90;
+        }
+
+        .hs-card h3 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+        .ds-card h3 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+        .ds-card p {
+            margin: 10px 0;
+        }
+
+        .edit-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .edit-btn i {
+            margin-right: 8px;
+            color: white;
+        }
+
+        .progress-bar {
+            background-color: #e3f2fd;
+            height: 8px;
+            width: 95%;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-left: 3%;
+        }
+
+        .progress {
+            background-color: #1e88e5;
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .achievements-section {
+            margin: 3px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+
+        .achievements-section h2 {
+            color: #1e3a8a;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .achievement-card {
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            position: relative;
+            min-height: 130px;
+        }
+
+        .achievement-card h3 {
+            color: #1e3a8a;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            margin-left: 10px;
+        }
+
+        .achievement-card p {
+            color: #555555;
+            margin-top: 10px;
+            margin-left: 18px;
+        }
+
+        .achievement-card.completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .achievement-card button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 18px;
+        }
+
+        .achievement-card button:hover {
+            background-color: #0056b3;
+        }
+
+        .achievement-card.completed button {
+            background-color: #28a745;
+            cursor: default;
+        }
+
+        .achievement-card.completed button:hover {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <button class="open-btn" id="openNav" id="closeNav"><i class="fa fa-bars"></i></button>
+        <div class="logo">
+            <img src="styles/imgs/logo.png">
+            <span>HealthifyMe</span>
+        </div>
+    </header>
+    <div class="side-nav" id="sideNav">
+        <button id="closeNav">&times;</button>
+        <ul>
+            <li><a href="db.html"><img src="styles/imgs/home.png">Dashboard</a></li>
+            <li><a href="nh.html"><img src="styles/imgs/location.png">Nearby Hospitals & Medical Shops</a></li>
+            <li><a href="hc.html"><img src="styles/imgs/healthcare.png">Health Analysis</a></li>
+            <li><a href="cc.html"><img src="styles/imgs/calories.png">Calorie Count</a></li>
+            <li><a href="rec.html"><img src="styles/imgs/health-check.png">Records</a></li>
+            <li><a href="apb.html"><img src="styles/imgs/calendar.png">Appointments</a></li>
+            <li><a href="profile.html"><img src="styles/imgs/user.png">Profile</a></li>
+            <li><a href="st.html"><img src="styles/imgs/settings.png">Settings</a></li>
+        </ul>
+    </div>
+    <main>
+    <div class="apb-header">
+        <h1>User Profile </h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="card">
+                <h3>Personal Information</h3>
+                <div id="viewMode">
+                    <p><i class="fa-regular fa-user"></i> <strong>Name:</strong> <span id="profileName"></span></p>
+                    <p><i class="fa-regular fa-envelope"></i> <strong>Email:</strong> <span id="profileEmail"></span></p>
+                    <p><i class="fa-solid fa-phone"></i> <strong>Phone:</strong> <span id="profilephone"></span></p>
+                    <p><i class="fa-regular fa-calendar"></i> <strong>Date of Birth:</strong> <span id="profiledob"></span></p>
+                    <a href="#" id="editButton" class="edit-btn"><i class="fa-regular fa-pen-to-square"></i>Edit Profile</a>
+                </div>
+                <form id="editMode" style="display: none;">
+                    <p><i class="fa-regular fa-user"></i> <strong>Name:</strong>
+                        <input type="text" id="nameInput" value=" "></p>
+                    <p><i class="fa-regular fa-envelope"></i> <strong>Email:</strong>
+                        <input type="email" id="emailInput" value=" "></p>
+                    <p><i class="fa-solid fa-phone"></i> <strong>Phone:</strong>
+                        <input type="text" id="phoneInput" value=" "></p>
+                    <p><i class="fa-regular fa-calendar"></i> <strong>Date of Birth:</strong>
+                        <input type="date" id="dobInput" value=" "></p>
+                    <button type="button" id="saveButton" class="edit-btn"><i class="fa-regular fa-floppy-disk"></i>Save</button>
+                    <button type="button" id="cancelButton" class="edit-btn" style="background-color: #555;"><i class="fa-solid fa-xmark"></i>Cancel</button>
+                </form>
+            </div>
+            <div class="hs-card">
+                <h3>Health Streaks</h3>
+                <br>
+                <canvas id="healthStreaksChart" width="450" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="ds-card" style="flex: 1;">
+                <h3>Daily Streak</h3>
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 2rem; color: orange; margin-right: 1rem; margin-top: 1%;">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                    </span>
+                    <p style="font-size: 1.2rem; font-weight: bold;">0 day</p>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <p style="margin-top: 10px; color: #666;">Keep the streak going! Log in daily to increase your streak.</p>
+            </div>
+        </div>
+        <!-- Achievements, Games & Exercises Section -->
+        <div class="achievements-section">
+            <h2>Daily Achievements</h2>
+            <div class="achievement-grid">
+                <div class="achievement-card" id="achievement1">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-solid fa-award" style="font-size: 1.1rem; margin-top: 12px; margin-left: 15px; color: orange;"></i>
+                        <h3>7-Day Streak</h3>
+                    </div>
+                    <p>Logged in for 7 consecutive days</p>
+                    <button onclick="markAsCompleted('achievement1')">Complete</button>
+                </div>
+                <div class="achievement-card" id="achievement2">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-regular fa-user" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #007bff;"></i>
+                        <h3>Health Explorer</h3>
+                    </div>
+                    <p>Viewed all sections of the app</p>
+                    <button onclick="markAsCompleted('achievement2')">Complete</button>
+                </div>
+                <div class="achievement-card" id="achievement3">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-regular fa-calendar" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #2cc865;"></i>
+                        <h3>Appointment Meter</h3>
+                    </div>
+                    <p>Walked 10,000 steps in a day</p>
+                    <button onclick="markAsCompleted('achievement3')">Complete</button>
+                </div>
+                <div class="achievement-card" id="achievement4">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-regular fa-envelope" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #b36ef6;"></i>
+                        <h3>Record Keeper</h3>
+                    </div>
+                    <p>Added 10 Health Records</p>
+                    <button onclick="markAsCompleted('achievement4')">Complete</button>
+                </div>
+                <div class="achievement-card" id="achievement5">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-solid fa-brain" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #686bf1"></i>
+                        <h3>Health Quiz</h3>
+                    </div>
+                    <p>Test your Health Knowledge</p>
+                    <button onclick="markAsCompleted('achievement5')">Complete</button>
+                </div>
+                <div class="achievement-card" id="achievement7">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-solid fa-bolt" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #f8771e"></i>
+                        <h3>Memory Match</h3>
+                    </div>
+                    <p>Match Health-Related Cards</p>
+                    <button onclick="markAsCompleted('achievement7')">Complete</button>
+                </div>
+                <div class="achievement-card" id="achievement8">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-regular fa-heart" style="font-size: 1.1rem; margin-top: 12px; margin-left: 20px; color: #ec5da4"></i>
+                        <h3>Healthy Habits Bingo</h3>
+                    </div>
+                    <p>Complete a line of healthy habits</p>
+                    <button onclick="markAsCompleted('achievement8')">Complete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </main>
+  <footer>
+    <div class="left">
+      <p>© 2025 HealthifyMe. All rights reserved.</p>
+    </div>
+    <div class="right">
+        <div class="language-select">
+            <label for="language">Language: </label>
+            <select id="language">
+              <option value="en">English</option>
+            </select>
+        </div>
+        <a href="au.html">About Us</a>
+        <a href="#">Meet Our Team</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+    </div>
+  </footer>
+<script>
+    const sideNav = document.getElementById('sideNav');
+    const openNav = document.getElementById('openNav');
+    const closeNav = document.getElementById('closeNav');
+    const mainContent = document.getElementById('mainContent');
+    openNav.addEventListener('click', () => {
+        const isOpen = sideNav.classList.contains('open');
+        if (isOpen) {
+            sideNav.classList.remove('open');
+            mainContent.classList.remove('shifted');
+        } else {
+            sideNav.classList.add('open');
+            mainContent.classList.add('shifted');
+        }
+    });
+
+    closeNav.addEventListener('click', () => {
+        sideNav.classList.remove('open');
+        mainContent.classList.remove('shifted');
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function () {
+        document.getElementById('viewMode').style.display = 'block';
+        document.getElementById('editMode').style.display = 'none';
+    });
+
+    //Health Streaks Graph
+    const ctx = document.getElementById('healthStreaksChart').getContext('2d');
+    const healthStreaksChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'streak',
+                data: [1, 2, 3, 4, 5, 6, 7, 0],
+                borderColor: '#4f8bf9',
+                backgroundColor: 'rgba(79, 139, 249, 0.2)',
+                pointBorderColor: '#4f8bf9', 
+                pointBackgroundColor: '#ffffff', 
+                pointRadius: 4,
+                pointHoverRadius: 6, 
+                borderWidth: 2, 
+                tension: 0.4, 
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 12
+                        },
+                        color: '#333'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: true, 
+                        drawBorder: true,
+                        color: '#e3e3e3' 
+                    },
+                    ticks: {
+                        color: '#333', 
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: false,
+                    grid: {
+                        display: true, 
+                        drawBorder: true,
+                        color: '#e3e3e3' 
+                    },
+                    ticks: {
+                        color: '#333',
+                        font: {
+                            size: 12
+                        },
+                        stepSize: 2
+                    }
+                }
+            }
+        }
+    });
+    const streak = 0;
+    const progressElement = document.querySelector('.progress');
+    progressElement.style.width = `${(streak / 7) * 100}%`;
+
+    function markAsCompleted(id) {
+          const card = document.getElementById(id);
+          if (!card.classList.contains('completed')) {
+              card.classList.add('completed');
+              const button = card.querySelector('button');
+              button.textContent = 'Completed';
+              button.disabled = true;
+          }
+      }
+
+      document.getElementById('editButton').addEventListener('click', () => {
+        document.getElementById('viewMode').style.display = 'none';
+        document.getElementById('editMode').style.display = 'block';
+        document.getElementById('nameInput').value = document.getElementById('profileName').textContent.trim();
+        document.getElementById('emailInput').value = document.getElementById('profileEmail').textContent.trim();
+        document.getElementById('phoneInput').value = document.getElementById('profilephone').textContent.trim();
+        document.getElementById('dobInput').value = document.getElementById('profiledob').textContent.trim();
+    });
+
+    // Cancel editing
+    document.getElementById('cancelButton').addEventListener('click', () => {
+        document.getElementById('editMode').style.display = 'none';
+        document.getElementById('viewMode').style.display = 'block';
+    });
+
+    // Save changes
+    document.getElementById('saveButton').addEventListener('click', () => {
+        // Save updated values
+        document.getElementById('profileName').textContent = document.getElementById('nameInput').value;
+        document.getElementById('profileEmail').textContent = document.getElementById('emailInput').value;
+        document.getElementById('profilephone').textContent = document.getElementById('phoneInput').value;
+        document.getElementById('profiledob').textContent = document.getElementById('dobInput').value;
+        // Switch back to view mode
+        document.getElementById('editMode').style.display = 'none';
+        document.getElementById('viewMode').style.display = 'block';
+    });
+</script>
+</body>
+</html>

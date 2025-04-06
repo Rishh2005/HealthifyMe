@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anagrams Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .game-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .anagrams {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .scrambled-word {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #38bdf8;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeAnagrams() {
+        const words = ['SMILE', 'HAPPY', 'JOYFUL', 'CONTENT', 'BLISSFUL', 'SERENE', 'OPTIMIST', 'CHEERFUL', 'GRATEFUL', 'INSPIRED'];
+        const word = words[Math.floor(Math.random() * words.length)];
+        const scrambled = word.split('').sort(() => Math.random() - 0.5).join('');
+
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="anagrams">
+                <p>Rearrange the letters to form a positive word:</p>
+                <p class="scrambled-word">${scrambled}</p>
+                <input type="text" id="anagramGuess" placeholder="Enter your guess">
+                <button class="btn" onclick="checkAnagram('${word}')">Submit</button>
+            </div>
+        `;
+    }
+
+    function checkAnagram(correctWord) {
+        const guess = document.getElementById('anagramGuess').value.toUpperCase();
+        if (guess === correctWord) {
+            updateStats(4);
+            alert('Correct! Well done!');
+            setTimeout(backToMenu, 1500);
+        } else {
+            alert('Try again!');
+        }
+    }
+
+    // Helper functions for stats and navigation
+    function updateStats(points) {
+        console.log(`You earned ${points} points!`);
+    }
+
+    function backToMenu() {
+        alert("Returning to menu...");
+        // Add your navigation logic here
+    }
+
+    // Automatically initialize the game on page load
+    document.addEventListener("DOMContentLoaded", initializeAnagrams);
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .game-container {
+            max-width: 400px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .maze-runner {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+        }
+
+        #maze {
+            margin: 10px auto;
+            display: grid;
+            gap: 1px;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        #maze > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeMazeRunner() {
+        gameState.playerPosition = { x: 0, y: 0 };
+        gameState.maze = generateMaze(6, 7); // Generate a 6x7 maze
+        renderMaze();
+    }
+
+    function generateMaze(rows, cols) {
+        const maze = Array.from({ length: rows }, () =>
+            Array.from({ length: cols }, () => (Math.random() < 0.7 ? 0 : 1))
+        );
+
+        // Ensure the start and end positions are open
+        maze[0][0] = 0;
+        maze[rows - 1][cols - 1] = 0;
+
+        return maze;
+    }
+
+    function renderMaze() {
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <h2>Maze Runner</h2>
+            <div class="maze-runner">
+                <div id="maze"></div>
+                <div class="controls">
+                    <button class="btn" onclick="movePlayer('up')">Up</button>
+                    <button class="btn" onclick="movePlayer('down')">Down</button>
+                    <button class="btn" onclick="movePlayer('left')">Left</button>
+                    <button class="btn" onclick="movePlayer('right')">Right</button>
+                </div>
+            </div>
+        `;
+
+        const mazeElement = document.getElementById('maze');
+        mazeElement.style.gridTemplateColumns = `repeat(${gameState.maze[0].length}, 30px)`;
+
+        mazeElement.innerHTML = ''; // Clear previous rendering
+        gameState.maze.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                const cellElement = document.createElement('div');
+                cellElement.style.width = '30px';
+                cellElement.style.height = '30px';
+                cellElement.style.border = '1px solid black';
+                cellElement.style.backgroundColor = cell === 1 ? 'black' : 'white';
+                if (x === gameState.playerPosition.x && y === gameState.playerPosition.y) {
+                    cellElement.style.backgroundColor = 'red';
+                }
+                mazeElement.appendChild(cellElement);
+            });
+        });
+    }
+
+    function movePlayer(direction) {
+        const newPosition = { ...gameState.playerPosition };
+        switch (direction) {
+            case 'up':
+                newPosition.y--;
+                break;
+            case 'down':
+                newPosition.y++;
+                break;
+            case 'left':
+                newPosition.x--;
+                break;
+            case 'right':
+                newPosition.x++;
+                break;
+        }
+
+        if (isValidMove(newPosition)) {
+            gameState.playerPosition = newPosition;
+            if (
+                newPosition.x === gameState.maze[0].length - 1 &&
+                newPosition.y === gameState.maze.length - 1
+            ) {
+                updateStats(4);
+                alert('Congratulations! You escaped the maze!');
+                setTimeout(() => {
+                    initializeMazeRunner(); // Start a new game with a different maze
+                }, 1500);
+            } else {
+                renderMaze();
+            }
+        }
+    }
+
+    function isValidMove(position) {
+        return (
+            position.x >= 0 &&
+            position.x < gameState.maze[0].length &&
+            position.y >= 0 &&
+            position.y < gameState.maze.length &&
+            gameState.maze[position.y][position.x] === 0
+        );
+    }
+
+    // Helper functions
+    function updateStats(points) {
+        console.log(`You earned ${points} points!`);
+    }
+
+    // Game state
+    const gameState = {};
+
+    // Initialize the game on page load
+    document.addEventListener('DOMContentLoaded', initializeMazeRunner);
+</script>
+</body>
+</html>

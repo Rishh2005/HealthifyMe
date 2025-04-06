@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Icon" href="styles/imgs/logo.png">
+    <link rel="stylesheet" href="../components/fixed.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>HealthifyMe Records-Section</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f0f9ff;
+        }
+
+        .apb-header {
+            margin: 30px 2rem 0;
+            text-align: left;
+            margin-left: 4%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #2564ec;
+        }
+
+        .main-container {
+            max-width: 1333px;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-left: 4%;
+        }
+
+        .records-section, .add-record-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .records-section h3, .add-record-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table thead {
+            background-color: #e0ecfc;
+        }
+
+        table th, table td {
+            text-align: left;
+            padding: 10px;
+            color: #0056b3;
+        }
+
+        table th {
+            font-weight: bold;
+        }
+
+        .actions button {
+            padding: 10px 20px;
+            font-size: 14px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin-right: 5px;
+        }
+
+        .actions button:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .actions button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .actions .view {
+            background-color: #3b82f6;
+        }
+
+        .actions .download {
+            background-color: #e0f2fe;
+            color: rgb(0, 0, 0);
+        }
+
+        .actions .download:hover {
+            background-color: #bae6fd;
+        }
+
+        .actions .delete {
+            background-color: #e0f2fe;
+            color: rgb(0, 0, 0);
+        }
+
+        .actions .delete:hover {
+            background-color: #fdbaba;
+        }
+
+        .view-record-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .view-record-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .view-record-modal img {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .add-record-section form {
+            display: grid;
+            gap: 10px;
+        }
+
+        .add-record-section input, .add-record-section button{
+            width: 90%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .add-record-section select {
+            width: 90%;
+            padding: 10px;
+            height: 40px;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .add-record-section textarea {
+            width: 90%;
+            padding: 10px;
+            height: 90px;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .add-record-section button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 10%;
+        }
+
+        .add-record-section button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Upload Container */
+        .upload-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Progress Bar Container */
+        .progress-bar-container {
+            flex: 1;
+            display: none;
+        }
+
+        /* Progress Bar Styling */
+        progress {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: #007bff;
+            border-radius: 5px;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: #007bff;
+            border-radius: 5px;
+        }
+
+        progress::-moz-progress-bar {
+            background-color: #007bff;
+            border-radius: 5px;
+        }
+
+        /* Notification Popup */
+        .notification {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            background-color: #009a05b0;
+            color: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <button class="open-btn" id="openNav" id="closeNav"><i class="fa fa-bars"></i></button>
+        <div class="logo">
+            <img src="styles/imgs/logo.png">
+            <span>HealthifyMe</span>
+        </div>
+    </header>
+    <div class="side-nav" id="sideNav">
+        <button id="closeNav">&times;</button>
+        <ul>
+            <li><a href="db.html"><img src="styles/imgs/home.png">Dashboard</a></li>
+            <li><a href="nh.html"><img src="styles/imgs/location.png">Nearby Hospitals & Medical Shops</a></li>
+            <li><a href="hc.html"><img src="styles/imgs/healthcare.png">Health Analysis</a></li>
+            <li><a href="cc.html"><img src="styles/imgs/calories.png">Calorie Count</a></li>
+            <li><a href="rec.html"><img src="styles/imgs/health-check.png">Records</a></li>
+            <li><a href="apb.html"><img src="styles/imgs/calendar.png">Appointments</a></li>
+            <li><a href="profile.html"><img src="styles/imgs/user.png">Profile</a></li>
+            <li><a href="st.html"><img src="styles/imgs/settings.png">Settings</a></li>
+        </ul>
+    </div>
+    <div id="notification" class="notification">
+        <p id="notificationMessage"></p>
+    </div>
+    <main>
+    <div class="apb-header">
+        <h1>Health Records</h1>
+    </div>
+    <div class="main-container">
+        <div class="records-section">
+            <h3>Your Records</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Doctor</th>
+                        <th>Note</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="view-record-modal" id="viewRecordModal" style="display: none;">
+            <div class="view-record-content">
+                <button id="closeViewModal" class="close-modal">&times;</button>
+                <h3>Record Details</h3>
+                <p><strong>Date:</strong> <span id="viewDate">--</span></p>
+                <p><strong>Type:</strong> <span id="viewType">--</span></p>
+                <p><strong>Doctor:</strong> <span id="viewDoctor">--</span></p>
+                <p><strong>Note:</strong> <span id="viewNote">--</span></p>
+                <p><strong>Image:</strong></p>
+                <div id="viewImageContainer">
+                    <img id="viewImage" src="" alt="Record Image" style="max-width: 100%; max-height: 300px; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+
+        <div class="add-record-section">
+            <h3>Add New Record</h3>
+            <form id="recordForm">
+                <input type="text" placeholder="dd-mm-yyyy" pattern="\d{2}-\d{2}-\d{4}" title="Format: dd-mm-yyyy" required>
+                <select required>
+                    <option value="" disabled selected>Select Record Type</option>
+                    <option value="general">General Checkup</option>
+                    <option value="blood-test">Blood Test</option>
+                    <option value="x-ray">X-Ray</option>
+                    <option value="dental">Dental Checkup</option>
+                    <option value="eye-exam">Eye Exam</option>
+                </select>
+                <input type="text" placeholder="Enter Doctor's Name" required>
+                <textarea placeholder="Add notes (optional)" id="note"></textarea>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <div class="upload-container">
+                    <button type="button" id="uploadButton"><i class="fa-regular fa-images"></i></i></button>
+                    <div class="progress-bar-container">
+                        <progress id="uploadProgress" value="0" max="100"></progress>
+                    </div>
+                </div>
+                <button type="submit"><i class="fa-solid fa-plus"></i></button>
+            </form>
+        </div>
+    </div>
+  </main>
+  <footer>
+    <div class="left">
+      <p>© 2025 HealthifyMe. All rights reserved.</p>
+    </div>
+    <div class="right">
+        <div class="language-select">
+            <label for="language">Language: </label>
+            <select id="language">
+              <option value="en">English</option>
+            </select>
+        </div>
+        <a href="au.html">About Us</a>
+        <a href="#">Meet Our Team</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+    </div>
+  </footer>
+<script>
+    const sideNav = document.getElementById('sideNav');
+    const openNav = document.getElementById('openNav');
+    const closeNav = document.getElementById('closeNav');
+    const mainContent = document.getElementById('mainContent');
+    const notification = document.getElementById('notification');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const progressBarContainer = document.querySelector('.progress-bar-container');
+
+    // Function to show notification
+    function showNotification(message, duration = 3000) {
+        notificationMessage.textContent = message;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, duration);
+    }
+
+    // Open/close side navigation
+    openNav.addEventListener('click', () => {
+        const isOpen = sideNav.classList.contains('open');
+        if (isOpen) {
+            sideNav.classList.remove('open');
+            mainContent.classList.remove('shifted');
+        } else {
+            sideNav.classList.add('open');
+            mainContent.classList.add('shifted');
+        }
+    });
+
+    closeNav.addEventListener('click', () => {
+        sideNav.classList.remove('open');
+        mainContent.classList.remove('shifted');
+    });
+
+    // Handle file upload button
+    const uploadButton = document.getElementById('uploadButton');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        progressBarContainer.style.display = 'block';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadRecords();
+    });
+
+    // Function to load records from localStorage
+    function loadRecords() {
+        const records = JSON.parse(localStorage.getItem('healthRecords')) || [];
+        const tableBody = document.querySelector('.records-section table tbody');
+        tableBody.innerHTML = '';
+
+        records.forEach((record, index) => {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${record.date}</td>
+                <td>${record.type}</td>
+                <td>${record.doctor}</td>
+                <td>${record.note}</td>
+                <td class="record-image">${record.image ? `<img src="${record.image}" alt="Record Image" style="max-width: 100px; max-height: 100px;">` : '--'}</td>
+                <td class="actions">
+                    <button class="view"><i class="fa-regular fa-eye" style="margin-right: 10px;"></i>View</button>
+                    <button class="download"><i class="fa-solid fa-download" style="margin-right: 10px;"></i>Download</button>
+                    <button class="delete"><i class="fa-solid fa-trash-can" style="margin-right: 10px;"></i>Delete</button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+        });
+    }
+
+    // Handle form submission
+    document.getElementById('recordForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // Get form inputs
+        const date = event.target.querySelector('input[type="text"]').value;
+        const type = event.target.querySelector('select').value;
+        const doctor = event.target.querySelector('input[placeholder="Enter Doctor\'s Name"]').value;
+        const note = document.getElementById('note').value;
+        const file = fileInput.files[0];
+
+        if (!date || !type || !doctor) {
+            showNotification('Please fill out all required fields!', 3000);
+            return;
+        }
+
+        // Show the progress bar
+        progressBarContainer.style.display = 'block';
+        uploadProgress.value = 0;
+
+        let imageDataUrl = null;
+        if (file) {
+            const reader = new FileReader();
+            reader.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percentLoaded = Math.round((event.loaded / event.total) * 100);
+                    uploadProgress.value = percentLoaded;
+                    console.log(`Upload Progress: ${percentLoaded}%`);
+                }
+            };
+
+            reader.onload = function (e) {
+                imageDataUrl = e.target.result;
+                uploadProgress.value = 100;
+                saveRecord(date, type, doctor, note, imageDataUrl);
+            };
+
+            reader.onerror = function () {
+                showNotification('Error uploading image. Please try again.', 3000);
+                progressBarContainer.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            saveRecord(date, type, doctor, note, null);
+        }
+    });
+
+    // Function to save a record to localStorage
+    function saveRecord(date, type, doctor, note, imageDataUrl) {
+        const records = JSON.parse(localStorage.getItem('healthRecords')) || [];
+        const newRecord = {
+            date,
+            type,
+            doctor,
+            note,
+            image: imageDataUrl,
+        };
+        records.push(newRecord);
+        localStorage.setItem('healthRecords', JSON.stringify(records));
+        loadRecords();
+        showNotification('Record saved successfully!', 3000);
+        document.getElementById('recordForm').reset();
+        fileInput.value = '';
+    }
+
+    // Handle delete button click
+    document.querySelector('.records-section').addEventListener('click', (event) => {
+        const deleteButton = event.target.closest('.delete');
+        if (deleteButton) {
+            const row = deleteButton.closest('tr');
+            const date = row.children[0].textContent;
+            const type = row.children[1].textContent;
+            const doctor = row.children[2].textContent;
+            const confirmDelete = confirm(`Are you sure you want to delete the record for ${date}, ${type}, ${doctor}?`);
+            if (confirmDelete) {
+                deleteRecord(date, type, doctor);
+                showNotification('Record deleted successfully!', 3000);
+            }
+        }
+    });
+
+    // Function to delete a record from localStorage
+    function deleteRecord(date, type, doctor) {
+        let records = JSON.parse(localStorage.getItem('healthRecords')) || [];
+        records = records.filter(record => 
+            record.date !== date || record.type !== type || record.doctor !== doctor
+        );
+        localStorage.setItem('healthRecords', JSON.stringify(records));
+        loadRecords();
+    }
+
+    // Handle download button click
+    document.querySelector('.records-section').addEventListener('click', (event) => {
+        const downloadButton = event.target.closest('.download');
+        if (downloadButton) {
+            const row = downloadButton.closest('tr');
+            downloadAsImage(row);
+        }
+    });
+
+    // Function to download record as an image
+    function downloadAsImage(row) {
+        html2canvas(row).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = imgData;
+            link.download = 'record.png';
+            link.click();
+            showNotification('Image downloaded successfully!', 3000);
+        });
+    }
+
+    // Handle view button click
+    document.querySelector('.records-section').addEventListener('click', (event) => {
+        const viewButton = event.target.closest('.view');
+        if (viewButton) {
+            const row = viewButton.closest('tr');
+            const date = row.children[0].textContent;
+            const type = row.children[1].textContent;
+            const doctor = row.children[2].textContent;
+            const note = row.children[3].textContent;
+            const imageElement = row.querySelector('.record-image img');
+
+            // Populate modal with record details
+            document.getElementById('viewDate').textContent = date;
+            document.getElementById('viewType').textContent = type;
+            document.getElementById('viewDoctor').textContent = doctor;
+            document.getElementById('viewNote').textContent = note;
+
+            if (imageElement) {
+                document.getElementById('viewImage').src = imageElement.src;
+                document.getElementById('viewImageContainer').style.display = 'block';
+            } else {
+                document.getElementById('viewImage').src = '';
+                document.getElementById('viewImageContainer').style.display = 'none';
+            }
+
+            // Show the modal
+            document.getElementById('viewRecordModal').style.display = 'flex';
+        }
+    });
+
+    // Close modal functionality
+    document.getElementById('closeViewModal').addEventListener('click', () => {
+        document.getElementById('viewRecordModal').style.display = 'none';
+    });
+
+    // Close modal on clicking outside the modal content
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('viewRecordModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

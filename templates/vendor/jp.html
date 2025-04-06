@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jigsaw Puzzle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .game-container {
+            max-width: 555px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .jigsaw-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            gap: 10px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .jigsaw-piece {
+            width: 80px;
+            height: 80px;
+            background-color: #e3e3e3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: move;
+        }
+
+        .btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #38bdf8;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeJigsawPuzzle() {
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="jigsaw-puzzle">
+                <div id="jigsawGrid" class="jigsaw-grid"></div>
+                <button class="btn" onclick="checkJigsaw()">Check Solution</button>
+            </div>
+        `;
+
+        const jigsawGrid = document.getElementById('jigsawGrid');
+        const pieces = ['🌳', '🏠', '☀️', '🌻', '🐦', '🌈', '🌺', '🦋', '🍎'];
+        pieces.sort(() => Math.random() - 0.5); // Shuffle the pieces randomly
+
+        pieces.forEach(piece => {
+            const cell = document.createElement('div');
+            cell.className = 'jigsaw-piece';
+            cell.textContent = piece;
+            cell.draggable = true;
+            cell.addEventListener('dragstart', drag);
+            jigsawGrid.appendChild(cell);
+        });
+
+        jigsawGrid.addEventListener('dragover', allowDrop);
+        jigsawGrid.addEventListener('drop', drop);
+    }
+
+    function drag(event) {
+        event.dataTransfer.setData("text", event.target.textContent);
+    }
+
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+
+    function drop(event) {
+        event.preventDefault();
+        const data = event.dataTransfer.getData("text");
+        const draggedElement = Array.from(document.querySelectorAll('.jigsaw-piece')).find(piece => piece.textContent === data);
+
+        if (event.target.classList.contains('jigsaw-piece') && event.target !== draggedElement) {
+            // Swap the text content between the dragged and dropped elements
+            const temp = event.target.textContent;
+            event.target.textContent = data;
+            draggedElement.textContent = temp;
+        }
+    }
+
+    function checkJigsaw() {
+        const pieces = document.querySelectorAll('.jigsaw-piece');
+        const solution = ['🌳', '🏠', '☀️', '🌻', '🐦', '🌈', '🌺', '🦋', '🍎'];
+        let isCorrect = true;
+        pieces.forEach((piece, index) => {
+            if (piece.textContent !== solution[index]) {
+                isCorrect = false;
+            }
+        });
+        if (isCorrect) {
+            alert('Congratulations! You solved the Jigsaw puzzle!');
+        } else {
+            alert('The solution is not correct. Keep trying!');
+        }
+    }
+
+    // Automatically initialize the Jigsaw Puzzle game when the page loads
+    document.addEventListener("DOMContentLoaded", initializeJigsawPuzzle);
+</script>
+</body>
+</html>

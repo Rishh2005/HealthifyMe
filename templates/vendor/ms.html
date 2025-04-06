@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Sequence</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+            background-color: #f4f4f4;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        #sequenceDisplay {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn {
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0;
+            transition: transform 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
+
+        .btn[style*="red"] {
+            background-color: red;
+        }
+
+        .btn[style*="blue"] {
+            background-color: blue;
+        }
+
+        .btn[style*="green"] {
+            background-color: green;
+        }
+
+        .btn[style*="yellow"] {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeMemorySequence() {
+        gameState.sequence = [];
+        gameState.playerSequence = [];
+        gameState.round = 1;
+
+        addToSequence();
+    }
+
+    function addToSequence() {
+        const colors = ['red', 'blue', 'green', 'yellow'];
+        gameState.sequence.push(colors[Math.floor(Math.random() * colors.length)]);
+        showSequence();
+    }
+
+    function showSequence() {
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <h2>Round ${gameState.round}</h2>
+            <div class="memory-sequence">
+                <div id="sequenceDisplay"></div>
+                <div id="playerInput" style="display: none;">
+                    <button class="btn" style="background-color: red;" onclick="playerInput('red')">Red</button>
+                    <button class="btn" style="background-color: blue;" onclick="playerInput('blue')">Blue</button>
+                    <button class="btn" style="background-color: green;" onclick="playerInput('green')">Green</button>
+                    <button class="btn" style="background-color: yellow;" onclick="playerInput('yellow')">Yellow</button>
+                </div>
+            </div>
+        `;
+
+        const sequenceDisplay = document.getElementById('sequenceDisplay');
+        let i = 0;
+
+        const interval = setInterval(() => {
+            if (i >= gameState.sequence.length) {
+                clearInterval(interval);
+                document.getElementById('playerInput').style.display = 'block';
+                return;
+            }
+            const color = gameState.sequence[i];
+            sequenceDisplay.style.backgroundColor = color;
+            setTimeout(() => {
+                sequenceDisplay.style.backgroundColor = 'white';
+            }, 500);
+            i++;
+        }, 1000);
+    }
+
+    function playerInput(color) {
+        gameState.playerSequence.push(color);
+        flashSimonColor(color);
+
+        // Check if the player's input matches the sequence so far
+        if (gameState.playerSequence[gameState.playerSequence.length - 1] !== gameState.sequence[gameState.playerSequence.length - 1]) {
+            alert(`Game Over! You reached round ${gameState.round}.`);
+            updateStats(gameState.round);
+            setTimeout(backToMenu, 1500);
+            return;
+        }
+
+        // Check if the player has completed the current sequence
+        if (gameState.playerSequence.length === gameState.sequence.length) {
+            gameState.round++;
+            gameState.playerSequence = [];
+            setTimeout(addToSequence, 1000);
+        }
+    }
+
+    function flashSimonColor(color) {
+        const sequenceDisplay = document.getElementById('sequenceDisplay');
+        sequenceDisplay.style.backgroundColor = color;
+        setTimeout(() => {
+            sequenceDisplay.style.backgroundColor = 'white';
+        }, 300);
+    }
+
+    // Helper functions
+    function updateStats(points) {
+        console.log(`You earned ${points} points!`);
+    }
+
+    function backToMenu() {
+        console.log('Returning to menu...');
+        // Replace this with your menu navigation logic
+    }
+
+    // Game state
+    const gameState = {};
+
+    // Initialize the game on page load
+    document.addEventListener('DOMContentLoaded', initializeMemorySequence);
+</script>
+</body>
+</html>

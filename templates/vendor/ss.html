@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .game-container {
+            max-width: 555px;
+            width: 100%;
+            height: 400px;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 100px);
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .color-card {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn {
+            margin-top: 10px;
+            background-color: #38bdf8;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+
+        #simonPrompt {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    let gameState = {
+        simonSequence: [],
+        playerSequence: []
+    };
+
+    function initializeSimonSays() {
+        const colors = ['red', 'blue', 'green', 'yellow'];
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="simon-says">
+                <div id="simonGrid" class="color-grid"></div>
+                <p id="simonPrompt">Watch the sequence</p>
+                <button id="startSimon" class="btn" onclick="startSimonSequence()">Start</button>
+            </div>
+        `;
+
+        const simonGrid = document.getElementById('simonGrid');
+        colors.forEach(color => {
+            const card = document.createElement('div');
+            card.className = 'color-card';
+            card.style.backgroundColor = color;
+            card.dataset.color = color;
+            simonGrid.appendChild(card);
+        });
+
+        gameState.simonSequence = [];
+        gameState.playerSequence = [];
+    }
+
+    function startSimonSequence() {
+        document.getElementById('startSimon').style.display = 'none';
+        gameState.simonSequence.push(getRandomColor());
+        playSimonSequence();
+    }
+
+    function playSimonSequence() {
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i >= gameState.simonSequence.length) {
+                clearInterval(interval);
+                document.getElementById('simonPrompt').textContent = 'Your turn!';
+                enableSimonInput();
+                return;
+            }
+            const color = gameState.simonSequence[i];
+            flashSimonColor(color);
+            i++;
+        }, 1000);
+    }
+
+    function flashSimonColor(color) {
+        const card = document.querySelector(`.color-card[data-color="${color}"]`);
+        card.style.opacity = '0.5';
+        setTimeout(() => {
+            card.style.opacity = '1';
+        }, 500);
+    }
+
+    function enableSimonInput() {
+        const cards = document.querySelectorAll('.color-card');
+        cards.forEach(card => {
+            card.onclick = () => handleSimonInput(card.dataset.color);
+        });
+    }
+
+    function handleSimonInput(color) {
+        gameState.playerSequence.push(color);
+        flashSimonColor(color);
+
+        if (gameState.playerSequence[gameState.playerSequence.length - 1] !== gameState.simonSequence[gameState.playerSequence.length - 1]) {
+            alert('Game over! Try again.');
+            setTimeout(initializeSimonSays, 1500); // Reset game
+            return;
+        }
+
+        if (gameState.playerSequence.length === gameState.simonSequence.length) {
+            if (gameState.simonSequence.length === 5) {
+                alert('Congratulations! You completed the sequence!');
+                setTimeout(initializeSimonSays, 1500); // Reset game
+            } else {
+                gameState.playerSequence = [];
+                document.getElementById('simonPrompt').textContent = 'Well done! Watch the next sequence';
+                setTimeout(startSimonSequence, 1000);
+            }
+        }
+    }
+
+    function getRandomColor() {
+        const colors = ['red', 'blue', 'green', 'yellow'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    // Automatically initialize the Simon Says game when the page loads
+    document.addEventListener("DOMContentLoaded", initializeSimonSays);
+</script>
+</body>
+</html>

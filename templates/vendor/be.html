@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Exercise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+            background-color: #f3f4f6;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .breathing-exercise-container {
+            margin-top: 20px;
+        }
+
+        .breathing-prompt {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .breathing-timer {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #007bff;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="gameContent"></div>
+    </div>
+
+    <script>
+        function initializeBreathingExercise() {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <div class="breathing-exercise-container">
+                    <p class="breathing-prompt">Inhale deeply through your nose, hold for a few seconds, and exhale slowly through your mouth. Repeat for 5 minutes.</p>
+                    <div class="breathing-timer" id="breathingTimer">5:00</div>
+                    <button class="btn" onclick="startBreathingTimer()">Start Timer</button>
+                </div>
+            `;
+            gameState.breathingTime = 300; // 5 minutes in seconds
+        }
+
+        function startBreathingTimer() {
+            const timer = document.getElementById('breathingTimer');
+            let timeLeft = gameState.breathingTime;
+            const interval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timer.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(interval);
+                    breathingComplete();
+                }
+            }, 1000);
+        }
+
+        function breathingComplete() {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <div class="breathing-exercise-container">
+                    <p class="breathing-prompt">Breathing exercise complete! Take a moment to enjoy your calmness.</p>
+                    <button class="btn" onclick="initializeBreathingExercise()">Restart Exercise</button>
+                    <button class="btn" onclick="backToMenu()">Back to Menu</button>
+                </div>
+            `;
+            updateStats(3); // Update stats with points for completing the exercise
+        }
+
+        // Helper functions
+        function updateStats(points) {
+            console.log(`You earned ${points} points!`);
+        }
+
+        function backToMenu() {
+            console.log('Returning to the menu...');
+            // Add menu navigation logic here
+        }
+
+        // Game state
+        const gameState = {};
+
+        // Initialize the game on page load
+        document.addEventListener('DOMContentLoaded', initializeBreathingExercise);
+    </script>
+</body>
+</html>

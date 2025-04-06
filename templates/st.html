@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Icon" href="styles/imgs/logo.png">
+    <link rel="stylesheet" href="../components/fixed.css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+    <title>HealthifyMe Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f0f9ff;
+        }
+
+        .mw-header {
+            padding: 30px;
+            text-align: left;
+        }
+
+        .mw-header h1 {
+            margin-top: 10px;
+            margin-left: 20px;
+            font-size: 1.8rem;
+            color: #2564ec;
+        }
+
+        .card {
+            display: flex;
+            gap: 20px;
+        }
+
+        .watch {
+            display: flex;
+            margin-top: 50px;
+            margin-left: 50px;
+            width: 350px;
+            height: 310px;
+            border-radius: 60%;
+            background-color: #e1f3ff;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .image-container {
+            width: 150px;
+            height: 150px;
+            margin-top: 40px;
+            border: 2px solid #000000;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; 
+        }
+
+        .image-container::before {
+            content: '+';
+            font-size: 30px;
+            font-weight: bold;
+            color: #000000;
+            position: absolute;
+            top: 43%;
+            left: 17%;
+            transform: translate(-50%, -50%);
+        }
+
+        .image-container img[src] {
+            display: block;
+        }
+
+        .image-container img[src] + ::before {
+            display: none;
+        }
+
+        .info {
+            margin-top: 10px;
+        }
+
+        .info h1 {
+            font-size: 1.2rem;
+            color: #000000;
+        }
+
+        .info p {
+            margin: 10px;
+            font-size: 0.9rem;
+            color: #2b2b2b;
+        }
+
+        .user {
+            flex: 1;
+            margin-top: 75px;
+            margin-left: 30px;
+            margin-right: 40px;
+            height: 180px;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .user h1 {
+            font-size: 1.5rem;
+            margin: 15px;
+            color: #1e3a8a;
+        }
+
+        .user p {
+            margin-left: 15px;
+            font-size: 1rem;
+            color: #000000;
+        }
+
+        .connect-button {
+            display: inline-block;
+            margin-top: 25px;
+            margin-left: 15px;
+            padding: 8px 16px;
+            background-color: #1e88e5;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .connect-button i{
+            margin-right: 9px;
+        }
+
+        .connect-button:hover {
+            background-color: #1565c0;
+        }
+
+        .connect-button:active {
+            transform: scale(0.98);
+        }
+
+        .st-header {
+            text-align: left;
+            padding: 30px;
+        }
+
+        .st-header h1 {
+            margin-top: 20px;
+            margin-left: 20px;
+            font-size: 1.8rem;
+            color: #2564ec;
+        }
+
+        .settings {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px auto;
+            max-width: 1444px; 
+            padding: 20px;
+            background: #f0f9ff;
+            border-radius: 10px;
+        }
+
+        .settings .setting {
+            flex: 1 1 calc(100% - 20px);
+            display: flex;
+            align-items: left;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+
+        .settings .setting i {
+            font-size: 18px;
+            color: #1e3a8a;
+        }
+
+        .settings .setting label {
+            font-size: 16px;
+            color: #333;
+            margin-left: 10px;
+            flex: 1; 
+            text-align: left; 
+        }
+
+        .settings .setting input[type="checkbox"],
+        .settings .setting input[type="text"] {
+            width: 40px;
+            height: 20px;
+            border: none;
+            border-radius: 20px;
+            padding: 5px;
+            text-align: center;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .settings .setting input[type="checkbox"] {
+            background-color: #ddd;
+            position: relative;
+        }
+
+        .settings .setting input[type="checkbox"]:checked {
+            background-color: #007BFF;
+        }
+
+        .settings .setting input[type="checkbox"]::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 1px;
+            left: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .settings .setting input[type="checkbox"]:checked::before {
+            transform: translateX(20px);
+        }
+
+        .settings .setting input[type="text"] {
+            background-color: #f9f9f9;
+            padding: 20px 5px;
+            font-size: 14px;
+            text-align: left;
+            color: #555;
+            width: 150px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(14px);
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <button class="open-btn" id="openNav" id="closeNav"><i class="fa fa-bars"></i></button>
+        <div class="logo">
+            <img src="styles/imgs/logo.png">
+            <span>HealthifyMe</span>
+        </div>
+    </header>
+    <div class="side-nav" id="sideNav">
+        <button id="closeNav">&times;</button>
+        <ul>
+            <li><a href="db.html"><img src="styles/imgs/home.png">Dashboard</a></li>
+            <li><a href="nh.html"><img src="styles/imgs/location.png">Nearby Hospitals & Medical Shops</a></li>
+            <li><a href="hc.html"><img src="styles/imgs/healthcare.png">Health Analysis</a></li>
+            <li><a href="cc.html"><img src="styles/imgs/calories.png">Calorie Count</a></li>
+            <li><a href="rec.html"><img src="styles/imgs/health-check.png">Records</a></li>
+            <li><a href="apb.html"><img src="styles/imgs/calendar.png">Appointments</a></li>
+            <li><a href="profile.html"><img src="styles/imgs/user.png">Profile</a></li>
+            <li><a href="st.html"><img src="styles/imgs/settings.png">Settings</a></li>
+        </ul>
+    </div>
+    <main>
+        <div class="mw-header">
+            <h1>My Watch</h1>
+            <div class="container">
+                <div class="card">
+                    <div class="watch">
+                        <div class="image-container">
+                            <img src=" ">
+                        </div>
+                        <div class="info">
+                            <h1 id="watchModel"></h1>
+                            <p><i class="fa fa-battery"></i> <span id="batteryLevel">--%</span></p>
+                        </div>
+                    </div>
+                    <div class="user">
+                        <h1 id="watchStatus">Hello, </h1>
+                        <p><strong>Status:</strong><span id="connectionStatus">Disconnected</span></p>
+                        <button id="connectButton" class="connect-button" onclick="connectToWatch()">
+                            <i class="fa-solid fa-link"></i>Connect Watch
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="st-header">
+            <h1>Settings</h1>
+            <div class="settings">
+                <div class="setting">
+                    <i class="fa-regular fa-moon"></i>
+                    <label for="dark-mode">Dark Mode</label>
+                    <input type="checkbox" id="dark-mode">
+                </div>
+                <div class="setting">
+                    <i class="fa-solid fa-lock"></i>
+                    <label for="two-factor">Two-Factor Authentication</label>
+                    <input type="checkbox" id="two-factor">
+                </div>
+            </div>
+        </div>
+    </main>
+      <footer>
+        <div class="left">
+          <p>© 2025 HealthifyMe. All rights reserved.</p>
+        </div>
+        <div class="right">
+            <div class="language-select">
+                <label for="language">Language: </label>
+                <select id="language">
+                  <option value="en">English</option>
+                </select>
+            </div>
+            <a href="au.html">About Us</a>
+            <a href="#">Meet Our Team</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+      </footer>
+    <script>
+        const sideNav = document.getElementById('sideNav');
+        const openNav = document.getElementById('openNav');
+        const closeNav = document.getElementById('closeNav');
+        const mainContent = document.getElementById('mainContent');
+
+            openNav.addEventListener('click', () => {
+            const isOpen = sideNav.classList.contains('open');
+            if (isOpen) {
+                sideNav.classList.remove('open');
+                mainContent.classList.remove('shifted');
+            } else {
+                sideNav.classList.add('open');
+                mainContent.classList.add('shifted');
+            }
+        });
+
+        closeNav.addEventListener('click', () => {
+            sideNav.classList.remove('open');
+            mainContent.classList.remove('shifted');
+        });
+
+        // Watch Connection
+        async function connectToWatch() {
+            connectButton.disabled = true;
+            connectButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Connecting...';
+            
+            try {
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['battery_service', 'heart_rate', 'generic_access', 'device_information', 'health_thermometer', 'alert_notification', 'cycling_speed_and_cadence', 'human_interface_device', 'immediate_alert', 'link_loss', 'phone_alert_status', 'scan_parameters', 'tx_power']
+                });
+
+                const server = await device.gatt.connect();
+                const batteryService = await server.getPrimaryService('battery_service');
+                const batteryLevelCharacteristic = await batteryService.getCharacteristic('battery_level');
+                const heartRateService = await server.getPrimaryService('heart_rate');
+                const heartRateCharacteristic = await heartRateService.getCharacteristic('heart_rate_measurement');
+                const batteryLevel = await batteryLevelCharacteristic.readValue();
+                const batteryPercentage = batteryLevel.getUint8(0);
+                document.getElementById('batteryLevel').textContent = `${batteryPercentage}%`;
+                const heartRate = await heartRateCharacteristic.readValue();
+                const heartRateValue = heartRate.getUint8(1);
+                console.log(`Heart Rate: ${heartRateValue} bpm`);
+                document.getElementById('connectionStatus').textContent = 'Connected';
+                
+                connectButton.innerHTML = '<i class="fa-solid fa-link-slash"></i> Disconnect';
+                connectButton.disabled = false;
+                connectButton.onclick = disconnectFromWatch;
+                
+            } catch (error) {
+                console.error('Error connecting to the watch:', error);
+                document.getElementById('connectionStatus').textContent = 'Disconnected';
+                
+                connectButton.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Retry Connection';
+                connectButton.disabled = false;
+            }
+        }
+        
+        function disconnectFromWatch() {
+            // Set status to disconnected
+            document.getElementById('connectionStatus').textContent = 'Disconnected';
+            document.getElementById('batteryLevel').textContent = '--%';
+            connectButton.innerHTML = '<i class="fa-solid fa-link"></i> Connect Watch';
+            connectButton.onclick = connectToWatch;
+        }
+    </script>
+</body>
+</html>

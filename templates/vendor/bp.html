@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .game-container {
+            max-width: 555px;
+            width: 100%;
+            height: 480px;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .bubble-wrap {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .bubble {
+            width: 80px;
+            height: 80px;
+            background: #7dd3fc;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bubble.popped {
+            background: #e5e7eb;
+            box-shadow: none;
+            cursor: default;
+        }
+
+        .bubble:hover {
+            background: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+<!-- Large Game Container -->
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeBubbleWrap() {
+        const gameContent = document.getElementById('gameContent');
+        const bubbleWrap = document.createElement('div');
+        bubbleWrap.className = 'bubble-wrap';
+
+        for (let i = 0; i < 25; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.onclick = () => popBubble(bubble);
+            bubbleWrap.appendChild(bubble);
+        }
+
+        gameContent.appendChild(bubbleWrap);
+    }
+
+    function popBubble(bubble) {
+        if (!bubble.classList.contains('popped')) {
+            bubble.classList.add('popped');
+            if (document.querySelectorAll('.bubble:not(.popped)').length === 0) {
+                setTimeout(() => alert('Congratulations! You popped all the bubbles!'), 500);
+            }
+        }
+    }
+    document.addEventListener("DOMContentLoaded", initializeBubbleWrap);
+</script>
+
+</body>
+</html>

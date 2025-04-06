@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Icon" href="styles/imgs/logo.png">
+    <link rel="stylesheet" href="../components/fixed.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1c03889634.js" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" defer></script>
+    <title>HealthifyMe Hospitals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f0f9ff;
+        }
+
+        .nh-header {
+            margin: 30px 2rem 0;
+            text-align: left;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #2564ec;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .map-container {
+            position: relative;
+            height: 450px;
+            width: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .search-bar-map {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar-map input {
+            height: 40px;
+            width: 95%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: rgb(0, 0, 0);
+        }
+
+        .hospital-list-container {
+            width: 100%;
+        }
+
+        .hospital-list-header {
+            font-size: 2rem;
+            color: #1e3a8a;
+            margin-bottom: 1rem; 
+        }
+
+        .hospital-list {
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hospital-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .hospital-list li {
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .hospital-list li:hover {
+            background-color: #e7f0ff;
+            border-color: #2564ec;
+        }
+
+        .hospital-list a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .hospital-list a:hover {
+            color: #1e88e5;
+        }
+
+        /*loading*/
+        .loader {
+          width: 50px;
+          aspect-ratio: 1;
+          display: grid;
+          margin-left: 50%;
+        }
+
+        .loader::before,
+        .loader::after {    
+          content:"";
+          grid-area: 1/1;
+          --c:no-repeat radial-gradient(farthest-side,#1e88e5 92%,#ffffff00);
+          background: 
+            var(--c) 50%  0, 
+            var(--c) 50%  100%, 
+            var(--c) 100% 50%, 
+            var(--c) 0    50%;
+          background-size: 12px 12px;
+          animation: l12 1s infinite;
+        }
+
+        .loader::before {
+          margin: 4px;
+          filter: hue-rotate(45deg);
+          background-size: 8px 8px;
+          animation-timing-function: linear
+        }
+
+        @keyframes l12 { 
+          100%{transform: rotate(.5turn)}
+        }
+    </style>
+</head>
+<body>
+  <header class="navbar">
+    <button class="open-btn" id="openNav" id="closeNav"><i class="fa fa-bars"></i></button>
+      <div class="logo">
+          <img src="styles/imgs/logo.png">
+          <span>HealthifyMe</span>
+      </div>
+  </header>
+  <div class="side-nav" id="sideNav">
+      <button id="closeNav">&times;</button>
+      <ul>
+          <li><a href="db.html"><img src="styles/imgs/home.png">Dashboard</a></li>
+          <li><a href="nh.html"><img src="styles/imgs/location.png">Nearby Hospitals & Medical Shops</a></li>
+          <li><a href="hc.html"><img src="styles/imgs/healthcare.png">Health Analysis</a></li>
+          <li><a href="cc.html"><img src="styles/imgs/calories.png">Calorie Count</a></li>
+          <li><a href="rec.html"><img src="styles/imgs/health-check.png">Records</a></li>
+          <li><a href="apb.html"><img src="styles/imgs/calendar.png">Appointments</a></li>
+          <li><a href="profile.html"><img src="styles/imgs/user.png">Profile</a></li>
+          <li><a href="st.html"><img src="styles/imgs/settings.png">Settings</a></li>
+      </ul>
+  </div>
+  <main>
+    <div class="nh-header">
+      <h1>Nearby Hospitals</h1>
+    </div>
+    <div class="main-container">
+        <!-- Map Container -->
+        <div class="map-container">
+            <div class="search-bar-map">
+                <input
+                  type="text"
+                  id="searchBar"
+                  placeholder="Search hospitals by name or address...."
+                  onkeyup="filterHospitals()"
+                />
+            </div>
+            <div id="map"></div>
+        </div>
+
+        <!-- Hospital List Container -->
+        <div class="hospital-list-container">
+            <h2 class="hospital-list-header">Nearby Hospitals & Medical Shops List</h2>
+            <div class="hospital-list">
+                <ul id="hospitalList"></ul>
+            </div>
+        </div>
+    </div>
+  </main>
+  <footer>
+    <div class="left">
+      <p>© 2025 HealthifyMe. All rights reserved.</p>
+    </div>
+    <div class="right">
+        <div class="language-select">
+            <label for="language">Language: </label>
+            <select id="language">
+              <option value="en">English</option>
+            </select>
+        </div>
+        <a href="au.html">About Us</a>
+        <a href="#">Meet Our Team</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+    </div>
+  </footer>
+  <script>
+    const sideNav = document.getElementById('sideNav');
+        const openNav = document.getElementById('openNav');
+        const closeNav = document.getElementById('closeNav');
+        const mainContent = document.getElementById('mainContent');
+
+        openNav.addEventListener('click', () => {
+        const isOpen = sideNav.classList.contains('open');
+        if (isOpen) {
+            sideNav.classList.remove('open');
+            mainContent.classList.remove('shifted');
+        } else {
+            sideNav.classList.add('open');
+            mainContent.classList.add('shifted');
+        }
+    });
+
+    closeNav.addEventListener('click', () => {
+        sideNav.classList.remove('open');
+        mainContent.classList.remove('shifted');
+    });
+
+    let map;
+    let hospitals = [];
+    let userLocation = { lat: 0, lng: 0 };
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+      });
+
+      // Get user location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            map.setCenter(userLocation);
+            fetchNearbyHospitals(userLocation);
+          },
+        );
+      } else {
+        alert("Geolocation not supported by your browser.");
+        fetchNearbyHospitals(defaultLocation);
+      }
+    }
+
+    function fetchNearbyHospitals(location) {
+      const apiKey = "c503613083b94b5b94898b44a0e09694";
+      const apiUrl = `https://api.geoapify.com/v2/places?categories=healthcare.hospital&filter=circle:77.219688,28.632759,5000&bias=proximity:77.219688,28.632759&limit=20&apiKey=c503613083b94b5b94898b44a0e09694`;
+
+      document.getElementById("hospitalList").innerHTML =
+        "<p class='loader'></p>";
+
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          hospitals = data.features;
+          displayHospitalList();
+          addMarkersToMap();
+        })
+        .catch((error) => {
+          console.error("Error fetching hospital data:", error);
+          document.getElementById("hospitalList").innerHTML =
+            "<p class='loading-message'>Failed to load hospitals.</p>";
+        });
+    }
+
+    function displayHospitalList() {
+      const hospitalList = document.getElementById("hospitalList");
+      if (!hospitals || hospitals.length === 0) {
+        hospitalList.innerHTML =
+          "<p class='loading-message'>No hospitals found nearby.</p>";
+        return;
+      }
+
+      hospitalList.innerHTML = hospitals
+        .map((hospital) => {
+          const name = hospital.properties.name || "Unnamed Hospital";
+          const address = hospital.properties.address_line2 || "Not Available";
+          const lat = hospital.geometry.coordinates[1];
+          const lng = hospital.geometry.coordinates[0];
+          const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+
+          return `
+            <li class="hospital-item">
+              <a href="${googleMapsUrl}">
+                <h3>${name}</h3>
+                <p>Address: ${address}</p>
+              </a>
+            </li>
+          `;
+        })
+        .join("");
+    }
+
+    function addMarkersToMap() {
+      hospitals.forEach((hospital) => {
+        const marker = new google.maps.Marker({
+          position: {
+            lat: hospital.geometry.coordinates[1],
+            lng: hospital.geometry.coordinates[0],
+          },
+          map,
+          title: hospital.properties.name,
+        });
+
+        marker.addListener("click", () => {
+          map.setCenter(marker.getPosition());
+        });
+      });
+    }
+
+    function viewDetails(name) {
+      alert(`Viewing details for hospital: ${name}`);
+    }
+
+    function filterHospitals() {
+      const searchQuery = document
+        .getElementById("searchBar")
+        .value.toLowerCase();
+
+      const filteredHospitals = hospitals.filter((hospital) =>
+        (hospital.properties.name || "")
+          .toLowerCase()
+          .includes(searchQuery)
+      );
+
+      const hospitalList = document.getElementById("hospitalList");
+      if (!filteredHospitals || filteredHospitals.length === 0) {
+        hospitalList.innerHTML =
+          "<p class='loading-message'>No hospitals found matching your search.</p>";
+        return;
+      }
+
+      hospitalList.innerHTML = filteredHospitals
+        .map(
+          (hospital) => `
+        <li>
+          <h3>${hospital.properties.name || "Unnamed Hospital"}</h3>
+          <p>Address: ${hospital.properties.address_line2 || "Not Available"}</p>
+        </li>
+      `
+        )
+        .join("");
+    }
+  </script>
+</body>
+</html>

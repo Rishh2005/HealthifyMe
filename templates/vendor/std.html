@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spot the Difference</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .game-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .spot-the-difference {
+            text-align: center;
+        }
+
+        #imageContainer {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .image-box {
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+            position: relative;
+        }
+
+        .difference-spot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .difference-spot.active {
+            background-color: red;
+        }
+
+        #differencesFound {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #38bdf8;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeSpotTheDifference() {
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="spot-the-difference">
+                <p>Find 3 differences between these images:</p>
+                <div id="imageContainer"></div>
+                <p id="differencesFound">Differences found: 0/3</p>
+            </div>
+        `;
+
+        const imageContainer = document.getElementById('imageContainer');
+        const image1 = document.createElement('div');
+        const image2 = document.createElement('div');
+
+        image1.className = 'image-box';
+        image2.className = 'image-box';
+        imageContainer.appendChild(image1);
+        imageContainer.appendChild(image2);
+
+        const differences = [
+            { top: '10%', left: '10%' },
+            { top: '50%', left: '50%' },
+            { top: '80%', left: '80%' }
+        ];
+
+        differences.forEach((diff, index) => {
+            const spot = document.createElement('div');
+            spot.className = 'difference-spot';
+            spot.style.top = diff.top;
+            spot.style.left = diff.left;
+            spot.onclick = () => handleSpotClick(index);
+            image2.appendChild(spot);
+        });
+
+        gameState.differencesFound = 0;
+    }
+
+    function handleSpotClick(index) {
+        const spots = document.querySelectorAll('.difference-spot');
+        const spot = spots[index];
+
+        if (!spot.classList.contains('active')) {
+            spot.classList.add('active');
+            gameState.differencesFound++;
+            document.getElementById('differencesFound').textContent = `Differences found: ${gameState.differencesFound}/3`;
+
+            if (gameState.differencesFound === 3) {
+                updateStats(3);
+                alert('Congratulations! You found all the differences!');
+                setTimeout(backToMenu, 1500);
+            }
+        }
+    }
+
+    // Helper functions for stats and navigation
+    function updateStats(points) {
+        console.log(`You earned ${points} points!`);
+    }
+
+    function backToMenu() {
+        alert("Returning to menu...");
+        // Add your navigation logic here
+    }
+
+    // Game state management
+    const gameState = {
+        differencesFound: 0
+    };
+
+    // Automatically initialize the game on page load
+    document.addEventListener("DOMContentLoaded", initializeSpotTheDifference);
+</script>
+</body>
+</html>

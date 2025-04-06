@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pattern Recognition Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .game-container {
+            max-width: 555px;
+            width: 100%;
+            height: 400px;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .pattern-recognition {
+            text-align: center;
+        }
+
+        .pattern {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #patternGuess {
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            width: 50%;
+        }
+
+        .btn {
+            background-color: #38bdf8;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializePatternRecognition() {
+        const patterns = [
+            ['🔴', '🔵', '🔴', '🔵', '?', '🔴'],
+            ['🔺', '🔻', '🔺', '🔻', '?', '🔺'],
+            ['1', '2', '4', '8', '?', '16'],
+            ['A', 'C', 'E', 'G', '?', 'I'],
+            ['🌑', '🌒', '🌓', '🌔', '?', '🌕'],
+            ['🐣', '🐥', '🐔', '?', '🐣']
+        ];
+
+        const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
+        const displayPattern = selectedPattern.slice(0, -1);
+        const correctAnswer = selectedPattern[selectedPattern.length - 1];
+
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="pattern-recognition">
+                <p class="pattern">${displayPattern.join(' ')}</p>
+                <input type="text" id="patternGuess" placeholder="Enter the next item">
+                <button class="btn" onclick="checkPatternGuess('${correctAnswer}')">Submit</button>
+            </div>
+        `;
+    }
+
+    function checkPatternGuess(correctAnswer) {
+        const guess = document.getElementById('patternGuess').value.trim();
+        if (guess === correctAnswer) {
+            initializePatternRecognition(); // Generate a new pattern
+        } else {
+            alert('Try again!');
+        }
+    }
+
+    // Automatically initialize the Pattern Recognition game when the page loads
+    document.addEventListener("DOMContentLoaded", initializePatternRecognition);
+</script>
+
+</body>
+</html>

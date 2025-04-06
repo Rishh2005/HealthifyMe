@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .game-container {
+            max-width: 555px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 40px);
+            gap: 2px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .sudoku-grid input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .sudoku-grid input[readonly] {
+            background-color: #eee;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #38bdf8;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeSudoku() {
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="sudoku">
+                <div id="sudokuGrid" class="sudoku-grid"></div>
+                <button class="btn" onclick="checkSudoku()">Check Solution</button>
+            </div>
+        `;
+
+        const sudokuGrid = document.getElementById('sudokuGrid');
+        const puzzle = generateSudokuPuzzle();
+
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const cell = document.createElement('input');
+                cell.type = 'number';
+                cell.min = 1;
+                cell.max = 9;
+                cell.value = puzzle[i][j] || '';
+                cell.readOnly = puzzle[i][j] !== 0;
+                sudokuGrid.appendChild(cell);
+            }
+        }
+    }
+
+    function generateSudokuPuzzle() {
+        // A simple pre-defined Sudoku puzzle. Can be expanded for dynamic puzzles.
+        return [
+            [5, 3, 0, 0, 7, 0, 0, 0, 0],
+            [6, 0, 0, 1, 9, 5, 0, 0, 0],
+            [0, 9, 8, 0, 0, 0, 0, 6, 0],
+            [8, 0, 0, 0, 6, 0, 0, 0, 3],
+            [4, 0, 0, 8, 0, 3, 0, 0, 1],
+            [7, 0, 0, 0, 2, 0, 0, 0, 6],
+            [0, 6, 0, 0, 0, 0, 2, 8, 0],
+            [0, 0, 0, 4, 1, 9, 0, 0, 5],
+            [0, 0, 0, 0, 8, 0, 0, 7, 9]
+        ];
+    }
+
+    function checkSudoku() {
+        const cells = document.querySelectorAll('#sudokuGrid input');
+        const solution = [
+            [5, 3, 4, 6, 7, 8, 9, 1, 2],
+            [6, 7, 2, 1, 9, 5, 3, 4, 8],
+            [1, 9, 8, 3, 4, 2, 5, 6, 7],
+            [8, 5, 9, 7, 6, 1, 4, 2, 3],
+            [4, 2, 6, 8, 5, 3, 7, 9, 1],
+            [7, 1, 3, 9, 2, 4, 8, 5, 6],
+            [9, 6, 1, 5, 3, 7, 2, 8, 4],
+            [2, 8, 7, 4, 1, 9, 6, 3, 5],
+            [3, 4, 5, 2, 8, 6, 1, 7, 9]
+        ];
+
+        let isCorrect = true;
+
+        cells.forEach((cell, index) => {
+            const row = Math.floor(index / 9);
+            const col = index % 9;
+            const value = parseInt(cell.value);
+            if (value !== solution[row][col]) {
+                isCorrect = false;
+            }
+        });
+
+        if (isCorrect) {
+            alert('Congratulations! You solved the Sudoku puzzle!');
+        } else {
+            alert('The solution is incorrect. Keep trying!');
+        }
+    }
+
+    // Automatically initialize the Sudoku game when the page loads
+    document.addEventListener("DOMContentLoaded", initializeSudoku);
+</script>
+</body>
+</html>

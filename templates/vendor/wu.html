@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .game-container {
+            max-width: 555px;
+            width: 100%;
+            height: 400px;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .word-scramble {
+            text-align: center;
+        }
+
+        .scrambled-word {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #1e3a8a;
+        }
+
+        #wordGuess {
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            width: 50%;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+<!-- Large Game Container -->
+<div class="game-container">
+    <div id="gameContent"></div>
+</div>
+
+<script>
+    function initializeWordScramble() {
+        const words = ['HAPPINESS', 'GRATITUDE', 'KINDNESS', 'LAUGHTER', 'FRIENDSHIP', 'COURAGE', 'STRENGTH', 'PEACE', 'LOVE', 'JOY'];
+        const word = words[Math.floor(Math.random() * words.length)];
+        const scrambled = word.split('').sort(() => Math.random() - 0.5).join('');
+
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="word-scramble">
+                <p class="scrambled-word">${scrambled}</p>
+                <input type="text" id="wordGuess" placeholder="Enter your guess">
+                <button class="btn" onclick="checkWordGuess('${word}')">Submit</button>
+            </div>
+        `;
+    }
+    function checkWordGuess(correctWord) {
+        const guess = document.getElementById('wordGuess').value.toUpperCase();
+        if (guess === correctWord) {
+            initializeWordScramble();
+        } else {
+            alert('Try again!');
+        }
+    }
+    document.addEventListener("DOMContentLoaded", initializeWordScramble);
+</script>
+
+</body>
+</html>
